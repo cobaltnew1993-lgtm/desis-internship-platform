@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Preferences - DESIS Onboarding</title>
     <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .onboarding-container {
             min-height: 100vh;
@@ -14,21 +16,15 @@
         }
 
         .onboarding-content {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .onboarding-card {
-            background: white;
-            border-radius: var(--radius-2xl);
-            padding: var(--space-10);
             box-shadow: var(--shadow-lg);
         }
 
-        .onboarding-header {
-            text-align: center;
-            margin-bottom: var(--space-8);
-        }
+
 
         .project-grid {
             display: grid;
@@ -219,22 +215,25 @@
             color: var(--slate-500);
         }
 
-        .onboarding-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: var(--space-8);
-            padding-top: var(--space-6);
-            border-top: 1px solid var(--slate-200);
+
+
+
+
+        /* Step number fill width overrides for this page */
+        .progress-steps.step-1::after {
+            width: 0%;
         }
 
-        @media (max-width: 768px) {
-            .project-grid {
-                grid-template-columns: 1fr;
-            }
+        .progress-steps.step-2::after {
+            width: 25%;
+        }
 
-            .onboarding-card {
-                padding: var(--space-6);
-            }
+        .progress-steps.step-3::after {
+            width: 50%;
+        }
+
+        .progress-steps.step-4::after {
+            width: 75%;
         }
     </style>
 </head>
@@ -243,220 +242,207 @@
     <div class="bg-gradient-mesh"></div>
 
     <div class="onboarding-container">
+        <!-- Sticky Page Header -->
+        <div class="onboarding-sticky-header" id="pageHeader">
+            <div class="container" style="max-width: 800px;">
+                <h1 class="font-bold" style="margin: 0; font-size: var(--text-2xl);">Project Preferences</h1>
+            </div>
+        </div>
+
         <div class="container">
             <div class="onboarding-content">
-                <!-- Progress Steps -->
-                <div class="progress-steps">
-                    <div class="progress-step completed">
-                        <div class="progress-step-circle">✓</div>
-                        <div class="progress-step-label">Profile</div>
-                    </div>
-                    <div class="progress-step completed">
-                        <div class="progress-step-circle">✓</div>
-                        <div class="progress-step-label">Skills</div>
-                    </div>
-                    <div class="progress-step active">
-                        <div class="progress-step-circle">3</div>
-                        <div class="progress-step-label">Preferences</div>
-                    </div>
-                    <div class="progress-step">
-                        <div class="progress-step-circle">4</div>
-                        <div class="progress-step-label">Schedule</div>
-                    </div>
-                </div>
-
                 <!-- Onboarding Card -->
                 <div class="onboarding-card fade-in">
-                    <div class="onboarding-header">
-                        <h2 style="margin-bottom: var(--space-2);">Choose Your Adventure 🎯</h2>
-                        <p style="color: var(--slate-600);">Select project domains you're interested in and rank your
-                            top 3</p>
+                    <div class="card-sticky-header">
+                        <div class="progress-steps-container">
+                            <div class="progress-steps step-3">
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Profile</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Skills</div>
+                                </div>
+                                <div class="progress-step active">
+                                    <div class="progress-step-circle">3</div>
+                                    <div class="progress-step-label">Preferences</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="progress-step-circle">4</div>
+                                    <div class="progress-step-label">Schedule</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-title font-semibold"
+                            style="font-size: var(--text-lg); color: var(--slate-500); margin: 0;">Step 3: Domain
+                            Interests</div>
                     </div>
 
-                    <form id="preferencesForm">
-                        <!-- Project Grid -->
-                        <div class="project-grid">
-                            <!-- Full Stack Development -->
-                            <div class="project-card" data-project="fullstack">
-                                <div class="selection-indicator"></div>
-                                <div class="project-icon"
-                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                    💻
+                    <div class="onboarding-card-body">
+                        <form id="preferencesForm">
+                            <!-- Project Grid -->
+                            <div class="project-grid">
+                                <!-- Full Stack Development -->
+                                <div class="project-card" data-project="fullstack">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                        <i data-lucide="code-2" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Full Stack Development</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                                        <span class="badge badge-primary">Popular</span>
+                                    </div>
                                 </div>
-                                <h4 class="project-title">Full Stack Development</h4>
-                                <p class="project-description">
-                                    Build end-to-end web applications using modern frameworks like React, Node.js, and
-                                    databases.
-                                </p>
-                                <div class="project-meta">
-                                    <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
-                                    <span class="badge badge-primary">Popular</span>
+
+                                <!-- Data Engineering -->
+                                <div class="project-card" data-project="data">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                                        <i data-lucide="database" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Data Engineering & Analytics</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                                    </div>
+                                </div>
+
+                                <!-- Trading Systems -->
+                                <div class="project-card" data-project="trading">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                                        <i data-lucide="trending-up" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Trading Systems & Algorithms</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                                        <span class="badge badge-info">High Impact</span>
+                                    </div>
+                                </div>
+
+                                <!-- FinTech Applications -->
+                                <div class="project-card" data-project="fintech">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white;">
+                                        <i data-lucide="credit-card" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">FinTech Applications</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                                    </div>
+                                </div>
+
+                                <!-- Cloud Infrastructure -->
+                                <div class="project-card" data-project="cloud">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                                        <i data-lucide="cloud" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Cloud Infrastructure</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                                    </div>
+                                </div>
+
+                                <!-- Machine Learning -->
+                                <div class="project-card" data-project="ml">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: white;">
+                                        <i data-lucide="brain" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Machine Learning & AI</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                                        <span class="badge badge-info">Emerging</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Data Engineering -->
-                            <div class="project-card" data-project="data">
-                                <div class="selection-indicator"></div>
-                                <div class="project-icon"
-                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                                    📊
-                                </div>
-                                <h4 class="project-title">Data Engineering & Analytics</h4>
-                                <p class="project-description">
-                                    Design data pipelines, analyze large datasets, and build powerful analytics
-                                    dashboards.
-                                </p>
-                                <div class="project-meta">
-                                    <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                            <!-- Ranking Section -->
+                            <div class="ranking-section">
+                                <div class="ranking-title">🏆 Your Top 3 Preferences (Drag to reorder)</div>
+                                <div class="ranking-list" id="rankingList">
+                                    <div class="empty-ranking">
+                                        Select at least 3 projects above to rank them
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Trading Systems -->
-                            <div class="project-card" data-project="trading">
-                                <div class="selection-indicator"></div>
-                                <div class="project-icon"
-                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                                    📈
-                                </div>
-                                <h4 class="project-title">Trading Systems & Algorithms</h4>
-                                <p class="project-description">
-                                    Develop algorithmic trading strategies, real-time processing systems, and market
-                                    analysis tools.
-                                </p>
-                                <div class="project-meta">
-                                    <span class="difficulty-badge difficulty-advanced">Advanced</span>
-                                    <span class="badge badge-info">High Impact</span>
-                                </div>
+                            <!-- Actions -->
+                            <div class="onboarding-actions">
+                                <button type="button" class="btn btn-ghost" onclick="history.back()">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    Continue →
+                                </button>
                             </div>
-
-                            <!-- FinTech Applications -->
-                            <div class="project-card" data-project="fintech">
-                                <div class="selection-indicator"></div>
-                                <div class="project-icon"
-                                    style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-                                    💳
-                                </div>
-                                <h4 class="project-title">FinTech Applications</h4>
-                                <p class="project-description">
-                                    Create payment systems, financial dashboards, and user-facing fintech products.
-                                </p>
-                                <div class="project-meta">
-                                    <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
-                                </div>
-                            </div>
-
-                            <!-- Cloud Infrastructure -->
-                            <div class="project-card" data-project="cloud">
-                                <div class="selection-indicator"></div>
-                                <div class="project-icon"
-                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-                                    ☁️
-                                </div>
-                                <h4 class="project-title">Cloud Infrastructure</h4>
-                                <p class="project-description">
-                                    Build scalable systems using AWS/Azure/GCP, containerization, and DevOps practices.
-                                </p>
-                                <div class="project-meta">
-                                    <span class="difficulty-badge difficulty-advanced">Advanced</span>
-                                </div>
-                            </div>
-
-                            <!-- Machine Learning -->
-                            <div class="project-card" data-project="ml">
-                                <div class="selection-indicator"></div>
-                                <div class="project-icon"
-                                    style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
-                                    🤖
-                                </div>
-                                <h4 class="project-title">Machine Learning & AI</h4>
-                                <p class="project-description">
-                                    Develop ML models, implement AI features, and work on cutting-edge AI applications.
-                                </p>
-                                <div class="project-meta">
-                                    <span class="difficulty-badge difficulty-advanced">Advanced</span>
-                                    <span class="badge badge-info">Emerging</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ranking Section -->
-                        <div class="ranking-section">
-                            <div class="ranking-title">🏆 Your Top 3 Preferences (Drag to reorder)</div>
-                            <div class="ranking-list" id="rankingList">
-                                <div class="empty-ranking">
-                                    Select at least 3 projects above to rank them
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Actions -->
-                        <div class="onboarding-actions">
-                            <button type="button" class="btn btn-ghost" onclick="history.back()">
-                                ← Back
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                Continue →
-                            </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        const projectNames = {
-            'fullstack': 'Full Stack Development',
-            'data': 'Data Engineering & Analytics',
-            'trading': 'Trading Systems & Algorithms',
-            'fintech': 'FinTech Applications',
-            'cloud': 'Cloud Infrastructure',
-            'ml': 'Machine Learning & AI'
-        };
+        <script>
+            const projectNames = {
+                'fullstack': 'Full Stack Development',
+                'data': 'Data Engineering & Analytics',
+                'trading': 'Trading Systems & Algorithms',
+                'fintech': 'FinTech Applications',
+                'cloud': 'Cloud Infrastructure',
+                'ml': 'Machine Learning & AI'
+            };
 
-        let selectedProjects = [];
-        const maxSelections = 3;
+            let selectedProjects = [];
+            const maxSelections = 3;
 
-        // Project card selection
-        const projectCards = document.querySelectorAll('.project-card');
+            // Project card selection
+            const projectCards = document.querySelectorAll('.project-card');
 
-        projectCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const projectId = card.dataset.project;
+            projectCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const projectId = card.dataset.project;
 
-                if (card.classList.contains('selected')) {
-                    // Deselect
-                    card.classList.remove('selected');
-                    card.querySelector('.selection-indicator').innerHTML = '';
-                    selectedProjects = selectedProjects.filter(p => p !== projectId);
-                } else {
-                    // Select (if under limit)
-                    if (selectedProjects.length < maxSelections) {
-                        card.classList.add('selected');
-                        card.querySelector('.selection-indicator').innerHTML = '✓';
-                        selectedProjects.push(projectId);
+                    if (card.classList.contains('selected')) {
+                        // Deselect
+                        card.classList.remove('selected');
+                        card.querySelector('.selection-indicator').innerHTML = '';
+                        selectedProjects = selectedProjects.filter(p => p !== projectId);
                     } else {
-                        alert(`You can select a maximum of ${maxSelections} projects. Deselect one to choose another.`);
+                        // Select (if under limit)
+                        if (selectedProjects.length < maxSelections) {
+                            card.classList.add('selected');
+                            card.querySelector('.selection-indicator').innerHTML = '✓';
+                            selectedProjects.push(projectId);
+                        } else {
+                            alert(`You can select a maximum of ${maxSelections} projects. Deselect one to choose another.`);
+                        }
                     }
-                }
 
-                updateRanking();
+                    updateRanking();
+                });
             });
-        });
 
-        function updateRanking() {
-            const rankingList = document.getElementById('rankingList');
+            function updateRanking() {
+                const rankingList = document.getElementById('rankingList');
 
-            if (selectedProjects.length === 0) {
-                rankingList.innerHTML = `
+                if (selectedProjects.length === 0) {
+                    rankingList.innerHTML = `
                     <div class="empty-ranking">
                         Select at least 3 projects above to rank them
                     </div>
                 `;
-                return;
-            }
+                    return;
+                }
 
-            rankingList.innerHTML = selectedProjects.map((projectId, index) => `
+                rankingList.innerHTML = selectedProjects.map((projectId, index) => `
                 <div class="rank-item" data-project="${projectId}">
                     <div class="rank-number">${index + 1}</div>
                     <div class="rank-name">${projectNames[projectId]}</div>
@@ -470,35 +456,68 @@
                     </div>
                 </div>
             `).join('');
-        }
-
-        function moveUp(index) {
-            if (index > 0) {
-                [selectedProjects[index], selectedProjects[index - 1]] = [selectedProjects[index - 1], selectedProjects[index]];
-                updateRanking();
-            }
-        }
-
-        function moveDown(index) {
-            if (index < selectedProjects.length - 1) {
-                [selectedProjects[index], selectedProjects[index + 1]] = [selectedProjects[index + 1], selectedProjects[index]];
-                updateRanking();
-            }
-        }
-
-        // Form submission
-        document.getElementById('preferencesForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            if (selectedProjects.length === 0) {
-                alert('Please select at least one project preference to continue.');
-                return;
             }
 
-            console.log('Selected preferences:', selectedProjects);
-            window.location.href = 'onboarding-schedule.html';
-        });
-    </script>
+            function moveUp(index) {
+                if (index > 0) {
+                    [selectedProjects[index], selectedProjects[index - 1]] = [selectedProjects[index - 1], selectedProjects[index]];
+                    updateRanking();
+                }
+            }
+
+            function moveDown(index) {
+                if (index < selectedProjects.length - 1) {
+                    [selectedProjects[index], selectedProjects[index + 1]] = [selectedProjects[index + 1], selectedProjects[index]];
+                    updateRanking();
+                }
+            }
+
+            // Form submission
+            document.getElementById('preferencesForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                if (selectedProjects.length === 0) {
+                    alert('Please select at least one project preference to continue.');
+                    return;
+                }
+
+                console.log('Selected preferences:', selectedProjects);
+                window.location.href = 'onboarding-schedule.html';
+            });
+
+            // Scroll handler for sticky header shadow
+            const pageHeader = document.getElementById('pageHeader');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    pageHeader.classList.add('scrolled');
+                } else {
+                    pageHeader.classList.remove('scrolled');
+                }
+            });
+
+            // Error validation with scroll and focus
+            function validateAndFocusError() {
+                const requiredFields = document.querySelectorAll('[required]');
+                for (const field of requiredFields) {
+                    if (!field.value || !field.checkValidity()) {
+                        field.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                        setTimeout(() => {
+                            field.focus();
+                            field.classList.add('error');
+                        }, 500);
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+        </script>
+    </div>
 </body>
 
 </html>

@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mentor Dashboard - DESIS Platform</title>
+    <title>Mentor Dashboard - DESIS Internship Platform</title>
     <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             background: var(--slate-50);
@@ -56,210 +58,155 @@
             color: var(--color-accent);
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: var(--slate-600);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            background: var(--color-error);
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--slate-200);
+            cursor: pointer;
+        }
+
         .dashboard-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: var(--space-8) var(--space-6);
         }
 
-        .stats-grid {
+        .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: 1fr 2fr;
             gap: var(--space-6);
-            margin-bottom: var(--space-8);
         }
 
-        .stat-card {
+        .card {
             background: white;
-            border-radius: var(--radius-xl);
+            border-radius: var(--radius-2xl);
             padding: var(--space-6);
             box-shadow: var(--shadow-lg);
+            border: 1px solid var(--slate-100);
+            margin-bottom: var(--space-6);
         }
 
-        .stat-value {
-            font-size: var(--text-4xl);
-            font-weight: var(--font-bold);
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
             color: var(--slate-900);
-            margin-bottom: var(--space-2);
-        }
-
-        .stat-label {
-            color: var(--slate-600);
-            font-size: var(--text-sm);
-        }
-
-        .stat-change {
-            font-size: var(--text-xs);
-            margin-top: var(--space-2);
-        }
-
-        .stat-change.positive {
-            color: var(--color-success);
-        }
-
-        .mentee-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--space-6);
-            margin-bottom: var(--space-8);
-        }
-
-        .mentee-card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
-        }
-
-        .mentee-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .mentee-header {
-            display: flex;
-            gap: var(--space-4);
-            margin-bottom: var(--space-6);
-        }
-
-        .mentee-info h3 {
-            margin-bottom: var(--space-1);
-        }
-
-        .mentee-meta {
-            color: var(--slate-600);
-            font-size: var(--text-sm);
-        }
-
-        .performance-bars {
-            margin-bottom: var(--space-6);
-        }
-
-        .performance-item {
             margin-bottom: var(--space-4);
         }
 
-        .performance-label {
+        .mentee-card {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: var(--space-2);
-            font-size: var(--text-sm);
-        }
-
-        .mentee-actions {
-            display: flex;
-            gap: var(--space-3);
-        }
-
-        .quick-actions {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-            margin-bottom: var(--space-8);
-        }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
             gap: var(--space-4);
-            margin-top: var(--space-4);
-        }
-
-        .action-button {
-            padding: var(--space-6);
-            border: 2px solid var(--slate-200);
-            border-radius: var(--radius-lg);
-            text-align: center;
+            padding: var(--space-4);
+            border-radius: var(--radius-xl);
+            background: var(--slate-50);
+            margin-bottom: var(--space-4);
             cursor: pointer;
             transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .mentee-card:hover {
             background: white;
-        }
-
-        .action-button:hover {
+            box-shadow: var(--shadow-md);
             border-color: var(--color-accent);
-            background: rgba(79, 70, 229, 0.05);
         }
 
-        .action-icon {
-            font-size: 2rem;
+        .mentee-card.active {
+            background: white;
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-accent);
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--slate-100);
             margin-bottom: var(--space-3);
         }
 
-        .action-title {
-            font-weight: var(--font-semibold);
-            color: var(--slate-700);
-            margin-bottom: var(--space-1);
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 10px;
+            font-weight: var(--font-bold);
+            text-transform: uppercase;
         }
 
-        .action-description {
-            font-size: var(--text-sm);
+        .status-todo {
+            background: var(--slate-100);
             color: var(--slate-500);
         }
 
-        .feedback-pending {
+        .status-review {
             background: var(--color-warning-light);
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            margin-bottom: var(--space-8);
+            color: var(--color-warning);
         }
 
-        .pending-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-            margin-top: var(--space-4);
+        .status-done {
+            background: var(--color-success-light);
+            color: var(--color-success);
         }
 
-        .pending-item {
-            background: white;
+        .feedback-input {
+            width: 100%;
+            min-height: 100px;
             padding: var(--space-4);
+            border: 2px solid var(--slate-100);
             border-radius: var(--radius-lg);
+            font-family: var(--font-body);
+            margin-bottom: var(--space-4);
+            resize: vertical;
+        }
+
+        .feedback-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .star-rating {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 4px;
+            margin-bottom: var(--space-4);
+            color: var(--slate-300);
+            cursor: pointer;
         }
 
-        .schedule-card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .meeting-list {
-            margin-top: var(--space-4);
-        }
-
-        .meeting-item {
-            display: flex;
-            gap: var(--space-4);
-            padding: var(--space-4);
-            border-left: 3px solid var(--color-accent);
-            margin-bottom: var(--space-3);
-            background: var(--slate-50);
-            border-radius: var(--radius-md);
-        }
-
-        .meeting-time {
-            font-weight: var(--font-bold);
-            color: var(--color-accent);
-            min-width: 80px;
-        }
-
-        @media (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .mentee-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-grid {
-                grid-template-columns: 1fr;
-            }
+        .star-rating .active {
+            color: var(--color-warning);
         }
     </style>
 </head>
@@ -268,18 +215,17 @@
     <!-- Top Navigation -->
     <nav class="top-nav">
         <div class="nav-container">
-            <div class="logo">DESIS</div>
+            <div class="logo">DESIS Mentor</div>
             <div class="nav-menu">
-                <a href="#" class="active">Dashboard</a>
-                <a href="#">My Mentees</a>
-                <a href="#">Feedback</a>
+                <a href="#" class="active">Overview</a>
+                <a href="#">Mentees</a>
+                <a href="#">Projects</a>
                 <a href="#">Resources</a>
             </div>
-            <div style="display: flex; align-items: center; gap: var(--space-4);">
-                <div style="position: relative; cursor: pointer; font-size: 1.25rem; color: var(--slate-600);">
-                    🔔
-                    <span
-                        style="position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; background: var(--color-error); border-radius: 50%; font-size: 10px; color: white; display: flex; align-items: center; justify-content: center;">2</span>
+            <div class="nav-right">
+                <div class="notification-bell">
+                    <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+                    <span class="notification-badge">2</span>
                 </div>
                 <img src="https://ui-avatars.com/api/?name=Priya+Sharma&background=10B981&color=fff" alt="Profile"
                     class="avatar">
@@ -287,301 +233,194 @@
         </div>
     </nav>
 
-    <!-- Dashboard Container -->
     <div class="dashboard-container">
-        <!-- Page Header -->
-        <div style="margin-bottom: var(--space-8);">
-            <h1 style="margin-bottom: var(--space-2);">Welcome back, Priya! 👋</h1>
-            <p style="color: var(--slate-600);">Here's an overview of your mentees' progress</p>
-        </div>
+        <h1 style="margin-bottom: var(--space-6);">Mentor Dashboard</h1>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value">3</div>
-                <div class="stat-label">Active Mentees</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">4.3</div>
-                <div class="stat-label">Avg Performance</div>
-                <div class="stat-change positive">↑ 0.3 from last week</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">2</div>
-                <div class="stat-label">Pending Feedback</div>
-                <div class="stat-change" style="color: var(--color-warning);">Due this week</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">92%</div>
-                <div class="stat-label">Completion Rate</div>
-                <div class="stat-change positive">↑ 5% this month</div>
-            </div>
-        </div>
-
-        <!-- Feedback Pending -->
-        <div class="feedback-pending">
-            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                <span style="font-size: 1.5rem;">⚠️</span>
-                <div>
-                    <strong style="color: var(--color-warning);">2 Feedback Submissions Pending</strong>
-                    <div style="font-size: var(--text-sm); color: var(--slate-600); margin-top: var(--space-1);">
-                        Please submit feedback by Friday to keep your mentees on track
-                    </div>
-                </div>
-            </div>
-            <div class="pending-list">
-                <div class="pending-item">
-                    <div>
-                        <strong>Rohan Kumar</strong> - Week 3 Feedback
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Due in 2 days</div>
-                    </div>
-                    <button class="btn btn-primary btn-sm">Submit Now</button>
-                </div>
-                <div class="pending-item">
-                    <div>
-                        <strong>Anjali Patel</strong> - Week 3 Feedback
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Due in 2 days</div>
-                    </div>
-                    <button class="btn btn-primary btn-sm">Submit Now</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <h3 style="margin-bottom: var(--space-2);">Quick Actions</h3>
-            <div class="action-grid">
-                <div class="action-button">
-                    <div class="action-icon">✍️</div>
-                    <div class="action-title">Submit Feedback</div>
-                    <div class="action-description">Weekly performance review</div>
-                </div>
-                <div class="action-button">
-                    <div class="action-icon">📅</div>
-                    <div class="action-title">Schedule 1:1</div>
-                    <div class="action-description">Book a meeting slot</div>
-                </div>
-                <div class="action-button">
-                    <div class="action-icon">📊</div>
-                    <div class="action-title">View Analytics</div>
-                    <div class="action-description">Track progress trends</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- My Mentees -->
-        <div>
-            <h2 style="margin-bottom: var(--space-6);">My Mentees</h2>
-            <div class="mentee-grid">
-                <!-- Mentee 1 -->
-                <div class="mentee-card">
-                    <div class="mentee-header">
-                        <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff" alt="Rohan"
-                            class="avatar-lg">
-                        <div class="mentee-info">
-                            <h3>Rohan Kumar</h3>
-                            <div class="mentee-meta">Trading Analytics Dashboard</div>
-                            <div class="mentee-meta">Week 3 of 8 • 37.5% Complete</div>
+        <div class="dashboard-grid">
+            <!-- Sidebar: My Mentees -->
+            <div class="sidebar-column">
+                <div class="card">
+                    <div class="section-title">My Mentees (3)</div>
+                    <div class="mentee-card active">
+                        <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff"
+                            class="avatar">
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-semibold);">Rohan Kumar</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-500);">UI/UX Intern • Week 3</div>
                         </div>
+                        <i data-lucide="chevron-right" style="width: 16px; color: var(--slate-400);"></i>
                     </div>
-
-                    <div class="performance-bars">
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Technical Skills</span>
-                                <span style="font-weight: var(--font-semibold);">4.5/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 90%; background: var(--color-success);"></div>
-                            </div>
+                    <div class="mentee-card">
+                        <img src="https://ui-avatars.com/api/?name=Isha+Verma&background=7C3AED&color=fff"
+                            class="avatar">
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-semibold);">Isha Verma</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-500);">Data Science • Week 3</div>
                         </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Time Management</span>
-                                <span style="font-weight: var(--font-semibold);">3.8/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 76%; background: var(--color-warning);"></div>
-                            </div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Communication</span>
-                                <span style="font-weight: var(--font-semibold);">4.2/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 84%; background: var(--color-success);"></div>
-                            </div>
-                        </div>
+                        <i data-lucide="chevron-right" style="width: 16px; color: var(--slate-400);"></i>
                     </div>
-
-                    <div style="margin-bottom: var(--space-4);">
-                        <div style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
-                            <strong>Latest Update:</strong> Completed API integration. Working on dashboard UI.
+                    <div class="mentee-card">
+                        <img src="https://ui-avatars.com/api/?name=Kabir+Roy&background=EC4899&color=fff"
+                            class="avatar">
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-semibold);">Kabir Roy</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-500);">Backend • Week 3</div>
                         </div>
-                        <div style="display: flex; gap: var(--space-2);">
-                            <span class="badge badge-success">On Track</span>
-                            <span class="badge badge-info">High Potential</span>
-                        </div>
-                    </div>
-
-                    <div class="mentee-actions">
-                        <button class="btn btn-primary" style="flex: 1;">Give Feedback</button>
-                        <button class="btn btn-secondary">Message</button>
+                        <i data-lucide="chevron-right" style="width: 16px; color: var(--slate-400);"></i>
                     </div>
                 </div>
 
-                <!-- Mentee 2 -->
-                <div class="mentee-card">
-                    <div class="mentee-header">
-                        <img src="https://ui-avatars.com/api/?name=Anjali+Patel&background=F59E0B&color=fff"
-                            alt="Anjali" class="avatar-lg">
-                        <div class="mentee-info">
-                            <h3>Anjali Patel</h3>
-                            <div class="mentee-meta">Data Pipeline Optimization</div>
-                            <div class="mentee-meta">Week 3 of 8 • 42% Complete</div>
-                        </div>
-                    </div>
-
-                    <div class="performance-bars">
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Technical Skills</span>
-                                <span style="font-weight: var(--font-semibold);">4.8/5</span>
+                <div class="card">
+                    <div class="section-title">Program Timeline</div>
+                    <div style="font-size: var(--text-sm); line-height: 1.6;">
+                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-3);">
+                            <div
+                                style="width: 2px; background: var(--color-success); margin-left: 7px; margin-top: 20px;">
                             </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 96%; background: var(--color-success);"></div>
-                            </div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Time Management</span>
-                                <span style="font-weight: var(--font-semibold);">4.5/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 90%; background: var(--color-success);"></div>
-                            </div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Communication</span>
-                                <span style="font-weight: var(--font-semibold);">4.0/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 80%; background: var(--color-success);"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: var(--space-4);">
-                        <div style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
-                            <strong>Latest Update:</strong> Excellent progress on data optimization. Ahead of schedule.
-                        </div>
-                        <div style="display: flex; gap: var(--space-2);">
-                            <span class="badge badge-success">Ahead of Schedule</span>
-                            <span class="badge badge-info">Top Performer</span>
-                        </div>
-                    </div>
-
-                    <div class="mentee-actions">
-                        <button class="btn btn-primary" style="flex: 1;">Give Feedback</button>
-                        <button class="btn btn-secondary">Message</button>
-                    </div>
-                </div>
-
-                <!-- Mentee 3 -->
-                <div class="mentee-card">
-                    <div class="mentee-header">
-                        <img src="https://ui-avatars.com/api/?name=Karthik+Reddy&background=EF4444&color=fff"
-                            alt="Karthik" class="avatar-lg">
-                        <div class="mentee-info">
-                            <h3>Karthik Reddy</h3>
-                            <div class="mentee-meta">Cloud Infrastructure Setup</div>
-                            <div class="mentee-meta">Week 3 of 8 • 30% Complete</div>
-                        </div>
-                    </div>
-
-                    <div class="performance-bars">
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Technical Skills</span>
-                                <span style="font-weight: var(--font-semibold);">3.5/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 70%; background: var(--color-warning);"></div>
-                            </div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Time Management</span>
-                                <span style="font-weight: var(--font-semibold);">3.2/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 64%; background: var(--color-error);"></div>
-                            </div>
-                        </div>
-                        <div class="performance-item">
-                            <div class="performance-label">
-                                <span>Communication</span>
-                                <span style="font-weight: var(--font-semibold);">3.8/5</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 76%; background: var(--color-warning);"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: var(--space-4);">
-                        <div style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
-                            <strong>Latest Update:</strong> Facing challenges with Docker setup. Need additional
-                            support.
-                        </div>
-                        <div style="display: flex; gap: var(--space-2);">
-                            <span class="badge badge-warning">Needs Attention</span>
-                            <span class="badge badge-error">At Risk</span>
-                        </div>
-                    </div>
-
-                    <div class="mentee-actions">
-                        <button class="btn btn-primary" style="flex: 1;">Give Feedback</button>
-                        <button class="btn btn-secondary">Message</button>
-                    </div>
-                </div>
-
-                <!-- Schedule Card -->
-                <div class="schedule-card">
-                    <h3 style="margin-bottom: var(--space-4);">This Week's Schedule</h3>
-                    <div class="meeting-list">
-                        <div class="meeting-item">
-                            <div class="meeting-time">Thu 3 PM</div>
                             <div>
-                                <strong>1:1 with Rohan</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Weekly check-in</div>
+                                <div style="font-weight: var(--font-medium);">Orientation</div>
+                                <div style="color: var(--slate-400); font-size: var(--text-xs);">Jan 5 - Completed</div>
                             </div>
                         </div>
-                        <div class="meeting-item">
-                            <div class="meeting-time">Fri 11 AM</div>
-                            <div>
-                                <strong>1:1 with Anjali</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Project review</div>
+                        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-3);">
+                            <div
+                                style="width: 2px; background: var(--color-accent); margin-left: 7px; margin-top: 20px;">
                             </div>
-                        </div>
-                        <div class="meeting-item">
-                            <div class="meeting-time">Fri 2 PM</div>
                             <div>
-                                <strong>1:1 with Karthik</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Troubleshooting session
+                                <div style="font-weight: var(--font-medium); color: var(--color-accent);">Project Phase
+                                    1</div>
+                                <div style="color: var(--slate-400); font-size: var(--text-xs);">Jan 12 - In Progress
                                 </div>
                             </div>
                         </div>
+                        <div style="display: flex; gap: var(--space-3);">
+                            <div style="width: 2px; background: var(--slate-200); margin-left: 7px; margin-top: 20px;">
+                            </div>
+                            <div>
+                                <div style="font-weight: var(--font-medium); color: var(--slate-300);">Mid-Term Review
+                                </div>
+                                <div style="color: var(--slate-300); font-size: var(--text-xs);">Feb 10 - Upcoming</div>
+                            </div>
+                        </div>
                     </div>
-                    <button class="btn btn-ghost" style="width: 100%; margin-top: var(--space-4);">
-                        View Full Calendar
-                    </button>
+                </div>
+            </div>
+
+            <!-- Main Content: Mentee Details -->
+            <div class="main-column">
+                <div class="card" style="background: linear-gradient(to right, #ffffff, #f8fafc);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-6);">
+                        <div style="display: flex; gap: var(--space-4); align-items: center;">
+                            <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff"
+                                class="avatar-lg" style="width: 64px; height: 64px; border-radius: 50%;">
+                            <div>
+                                <h2 style="margin: 0;">Rohan Kumar</h2>
+                                <div style="color: var(--slate-500);">Project: Real-Time Trading Analytics Dashboard
+                                </div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: var(--font-bold); font-size: var(--text-xl);">45%</div>
+                            <div style="color: var(--slate-400); font-size: var(--text-xs);">Total Progress</div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-bottom: var(--space-6);">
+                        <div
+                            style="background: white; padding: var(--space-3); border-radius: var(--radius-lg); border: 1px solid var(--slate-100); text-align: center;">
+                            <div style="font-size: var(--text-xs); color: var(--slate-400);">Tasks Done</div>
+                            <div style="font-weight: var(--font-bold);">12/28</div>
+                        </div>
+                        <div
+                            style="background: white; padding: var(--space-3); border-radius: var(--radius-lg); border: 1px solid var(--slate-100); text-align: center;">
+                            <div style="font-size: var(--text-xs); color: var(--slate-400);">Hours Logged</div>
+                            <div style="font-weight: var(--font-bold);">34h</div>
+                        </div>
+                        <div
+                            style="background: white; padding: var(--space-3); border-radius: var(--radius-lg); border: 1px solid var(--slate-100); text-align: center;">
+                            <div style="font-size: var(--text-xs); color: var(--slate-400);">Attendance</div>
+                            <div style="font-weight: var(--font-bold);">100%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Pending Review -->
+                <div class="card">
+                    <div class="section-header"
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                        <h3 style="margin: 0;">Pending Review</h3>
+                        <span class="badge badge-warning">2 Action Required</span>
+                    </div>
+
+                    <div class="task-item">
+                        <div
+                            style="width: 40px; height: 40px; background: var(--slate-50); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="file-text" style="color: var(--color-accent); width: 20px;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-medium);">Review API Integration Docs</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-400);">Submitted 4h ago •
+                                api-docs-v1.pdf</div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <button class="btn btn-sm btn-ghost" style="color: var(--color-error);">Request
+                                Changes</button>
+                            <button class="btn btn-sm btn-accent">Approve</button>
+                        </div>
+                    </div>
+
+                    <div class="task-item">
+                        <div
+                            style="width: 40px; height: 40px; background: var(--slate-50); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="code" style="color: var(--color-accent); width: 20px;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-medium);">Dashboard Component Prototype</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-400);">Submitted Yesterday •
+                                figma-link.txt</div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <button class="btn btn-sm btn-ghost" style="color: var(--color-error);">Request
+                                Changes</button>
+                            <button class="btn btn-sm btn-accent">Approve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Weekly Feedback -->
+                <div class="card">
+                    <div class="section-title">Record Weekly Feedback - Week 3</div>
+                    <div
+                        style="margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: var(--font-medium);">
+                        Overall Rating</div>
+                    <div class="star-rating">
+                        <i data-lucide="star" class="active"></i>
+                        <i data-lucide="star" class="active"></i>
+                        <i data-lucide="star" class="active"></i>
+                        <i data-lucide="star" class="active"></i>
+                        <i data-lucide="star"></i>
+                    </div>
+
+                    <textarea class="feedback-input"
+                        placeholder="What did the intern do well this week? Any areas for improvement?"></textarea>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label
+                            style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); cursor: pointer;">
+                            <input type="checkbox"> Share with Intern immediately
+                        </label>
+                        <button class="btn btn-accent">Submit Feedback</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>

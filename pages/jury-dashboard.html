@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jury Dashboard - DESIS Internship Platform</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background: var(--slate-50);
+            padding-top: 80px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            padding: var(--space-4) 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--space-6);
+            align-items: center;
+        }
+
+        .nav-menu a {
+            font-weight: var(--font-medium);
+            color: var(--slate-600);
+            transition: color 0.2s ease;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--color-accent);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: var(--slate-600);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            background: var(--color-error);
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--slate-200);
+            cursor: pointer;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--slate-100);
+            margin-bottom: var(--space-6);
+        }
+
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--slate-900);
+            margin-bottom: var(--space-4);
+        }
+
+        .evaluation-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: white;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--slate-100);
+            margin-bottom: var(--space-4);
+            transition: all 0.2s ease;
+        }
+
+        .evaluation-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-accent);
+        }
+
+        .score-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-md);
+            text-align: center;
+            font-weight: var(--font-bold);
+        }
+
+        .score-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .rubric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) 0;
+            border-bottom: 1px solid var(--slate-50);
+        }
+
+        .rubric-row:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--slate-50);
+        }
+
+        .rank {
+            width: 24px;
+            font-weight: var(--font-bold);
+            color: var(--slate-400);
+        }
+
+        .rank-top {
+            color: var(--color-warning);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo">DESIS Jury</div>
+            <div class="nav-menu">
+                <a href="#" class="active">Overview</a>
+                <a href="#">Evaluations</a>
+                <a href="#">Scorecards</a>
+                <a href="#">Leaderboard</a>
+            </div>
+            <div class="nav-right">
+                <div class="notification-bell">
+                    <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Jury+Member&background=EF4444&color=fff" alt="Profile"
+                    class="avatar">
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div
+            style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+            <div>
+                <h1 style="margin: 0;">Evaluation Portal</h1>
+                <p style="color: var(--slate-500); margin: 0;">Summer Internship Programme 2026</p>
+            </div>
+            <div style="text-align: right;">
+                <div style="font-size: var(--text-sm); font-weight: var(--font-medium);">Final Presentation Day</div>
+                <div style="color: var(--color-accent); font-weight: var(--font-bold);">Jan 30, 2026</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Main Content: Evaluation Queue -->
+            <div class="main-column">
+                <div class="card">
+                    <div class="section-title">Evaluation Queue (Pending: 4)</div>
+
+                    <div class="evaluation-item">
+                        <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff"
+                            class="avatar">
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-bold);">Rohan Kumar</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">Real-Time Trading Analytics
+                                Dashboard</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: var(--text-xs); color: var(--slate-400); margin-bottom: 4px;">
+                                Presentation Slot</div>
+                            <div style="font-weight: var(--font-medium);">10:00 - 10:20 AM</div>
+                        </div>
+                        <button class="btn btn-accent btn-sm" onclick="showScorecard('Rohan Kumar')">Evaluate</button>
+                    </div>
+
+                    <div class="evaluation-item">
+                        <img src="https://ui-avatars.com/api/?name=Arjun+Singh&background=F59E0B&color=fff"
+                            class="avatar">
+                        <div style="flex: 1;">
+                            <div style="font-weight: var(--font-bold);">Arjun Singh</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">ML Model for Fraud
+                                Detection</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: var(--text-xs); color: var(--slate-400); margin-bottom: 4px;">
+                                Presentation Slot</div>
+                            <div style="font-weight: var(--font-medium);">10:30 - 10:50 AM</div>
+                        </div>
+                        <button class="btn btn-accent btn-sm">Evaluate</button>
+                    </div>
+                </div>
+
+                <!-- Active Scorecard (Appears when Evaluate is clicked) -->
+                <div class="card" id="scorecardSection">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+                        <h3 style="margin: 0;">Scorecard: <span id="internName">Rohan Kumar</span></h3>
+                        <div
+                            style="padding: 4px 12px; background: var(--slate-100); border-radius: var(--radius-full); font-size: var(--text-sm);">
+                            Draft Saved</div>
+                    </div>
+
+                    <div class="rubric-row">
+                        <div>
+                            <div style="font-weight: var(--font-bold);">Technical Implementation</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">Code quality, architecture,
+                                and robustness</div>
+                        </div>
+                        <input type="number" class="score-input" value="8" min="0" max="10">
+                    </div>
+
+                    <div class="rubric-row">
+                        <div>
+                            <div style="font-weight: var(--font-bold);">Innovation & Creativity</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">Uniqueness of approach and
+                                problem solving</div>
+                        </div>
+                        <input type="number" class="score-input" value="9" min="0" max="10">
+                    </div>
+
+                    <div class="rubric-row">
+                        <div>
+                            <div style="font-weight: var(--font-bold);">Presentation Skills</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">Clarity of communication
+                                and demo</div>
+                        </div>
+                        <input type="number" class="score-input" value="7" min="0" max="10">
+                    </div>
+
+                    <div style="margin-top: var(--space-6);">
+                        <div style="font-weight: var(--font-bold); margin-bottom: var(--space-2);">Jury Comments</div>
+                        <textarea class="form-textarea"
+                            placeholder="Provide constructive feedback for the intern..."></textarea>
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-6);">
+                        <button class="btn btn-ghost">Save Draft</button>
+                        <button class="btn btn-accent">Submit Evaluation</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar: Leaderboard & Stats -->
+            <div class="sidebar-column">
+                <div class="card">
+                    <div class="section-title">Live Leaderboard</div>
+                    <div class="leaderboard-item">
+                        <span class="rank rank-top">1</span>
+                        <img src="https://ui-avatars.com/api/?name=Neha+Gupta&background=10B981&color=fff"
+                            class="avatar" style="width: 24px; height: 24px;">
+                        <span style="flex: 1; font-size: var(--text-sm);">Neha Gupta</span>
+                        <span style="font-weight: var(--font-bold);">9.8</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank rank-top">2</span>
+                        <img src="https://ui-avatars.com/api/?name=Isha+Verma&background=7C3AED&color=fff"
+                            class="avatar" style="width: 24px; height: 24px;">
+                        <span style="flex: 1; font-size: var(--text-sm);">Isha Verma</span>
+                        <span style="font-weight: var(--font-bold);">9.4</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank rank-top">3</span>
+                        <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff"
+                            class="avatar" style="width: 24px; height: 24px;">
+                        <span style="flex: 1; font-size: var(--text-sm);">Rohan Kumar</span>
+                        <span style="font-weight: var(--font-bold);">9.2</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">4</span>
+                        <img src="https://ui-avatars.com/api/?name=Arjun+Singh&background=F59E0B&color=fff"
+                            class="avatar" style="width: 24px; height: 24px;">
+                        <span style="flex: 1; font-size: var(--text-sm);">Arjun Singh</span>
+                        <span style="font-weight: var(--font-bold);">8.9</span>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" style="width: 100%; margin-top: var(--space-4);">Full
+                        Rankings</button>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">Evaluation Summary</div>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: var(--text-xs); margin-bottom: 4px;">
+                                <span>Interns Evaluated</span>
+                                <span>8/12</span>
+                            </div>
+                            <div class="progress-bar" style="height: 6px;">
+                                <div class="progress-fill" style="width: 66%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: var(--text-xs); margin-bottom: 4px;">
+                                <span>Avg Score Given</span>
+                                <span>8.4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        function showScorecard(name) {
+            document.getElementById('internName').textContent = name;
+            document.getElementById('scorecardSection').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>

@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Admin Dashboard - DESIS Platform</title>
+    <title>HR Dashboard - DESIS Internship Platform</title>
     <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body {
             background: var(--slate-50);
@@ -24,7 +26,7 @@
         }
 
         .nav-container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 var(--space-6);
             display: flex;
@@ -56,49 +58,104 @@
             color: var(--color-accent);
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            color: var(--slate-600);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            background: var(--color-error);
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--slate-200);
+            cursor: pointer;
+        }
+
         .dashboard-container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: var(--space-8) var(--space-6);
         }
 
-        .program-health {
-            background: white;
-            border-radius: var(--radius-2xl);
-            padding: var(--space-8);
-            box-shadow: var(--shadow-lg);
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-6);
             margin-bottom: var(--space-8);
         }
 
-        .health-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: var(--space-6);
-            margin-top: var(--space-6);
+        .stat-card {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--slate-100);
         }
 
-        .health-metric {
-            text-align: center;
-        }
-
-        .health-value {
-            font-size: var(--text-3xl);
-            font-weight: var(--font-bold);
-            color: var(--slate-900);
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: var(--space-2);
         }
 
-        .health-label {
-            font-size: var(--text-sm);
-            color: var(--slate-600);
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .health-indicator {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-left: var(--space-2);
+        .stat-value {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--slate-500);
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: var(--text-xs);
+            margin-top: var(--space-2);
+        }
+
+        .trend-up {
+            color: var(--color-success);
+        }
+
+        .trend-down {
+            color: var(--color-error);
         }
 
         .dashboard-grid {
@@ -107,179 +164,96 @@
             gap: var(--space-6);
         }
 
-        .at-risk-section {
-            background: var(--color-warning-light);
-            border-radius: var(--radius-xl);
+        .card {
+            background: white;
+            border-radius: var(--radius-2xl);
             padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--slate-100);
             margin-bottom: var(--space-6);
         }
 
-        .at-risk-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-3);
-            margin-top: var(--space-4);
-        }
-
-        .at-risk-item {
-            background: white;
-            padding: var(--space-4);
-            border-radius: var(--radius-lg);
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .matching-interface {
-            background: white;
-            border-radius: var(--radius-2xl);
-            padding: var(--space-8);
-            box-shadow: var(--shadow-lg);
             margin-bottom: var(--space-6);
         }
 
-        .matching-controls {
-            display: flex;
-            gap: var(--space-4);
-            margin-bottom: var(--space-6);
+        .table-container {
+            overflow-x: auto;
         }
 
-        .match-results {
-            margin-top: var(--space-6);
-        }
-
-        .match-item {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto auto auto;
-            gap: var(--space-4);
-            align-items: center;
-            padding: var(--space-4);
-            border: 2px solid var(--slate-200);
-            border-radius: var(--radius-lg);
-            margin-bottom: var(--space-3);
+        .intern-row {
             transition: all 0.2s ease;
         }
 
-        .match-item:hover {
-            border-color: var(--color-accent);
+        .intern-row:hover {
             background: var(--slate-50);
         }
 
-        .match-score {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: var(--font-bold);
-            font-size: var(--text-xl);
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--text-xs);
+            font-weight: var(--font-semibold);
         }
 
-        .match-score.high {
+        .status-active {
             background: var(--color-success-light);
             color: var(--color-success);
         }
 
-        .match-score.medium {
+        .status-onboarding {
+            background: var(--color-info-light);
+            color: var(--color-info);
+        }
+
+        .status-review {
             background: var(--color-warning-light);
             color: var(--color-warning);
         }
 
-        .intern-stats {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-            margin-bottom: var(--space-6);
+        .progress-compact {
+            width: 100px;
+            height: 6px;
+            background: var(--slate-100);
+            border-radius: var(--radius-full);
+            overflow: hidden;
         }
 
-        .chart-container {
-            margin-top: var(--space-6);
-            height: 200px;
-            background: var(--slate-50);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: var(--space-4);
-        }
-
-        .chart-bar {
-            flex: 1;
-            max-width: 60px;
+        .progress-fill {
+            height: 100%;
             background: var(--color-accent);
-            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-            position: relative;
+        }
+
+        .activity-item {
             display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        .chart-value {
-            position: absolute;
-            top: -24px;
-            font-size: var(--text-sm);
-            font-weight: var(--font-semibold);
-        }
-
-        .chart-label {
-            margin-top: var(--space-2);
-            font-size: var(--text-xs);
-            color: var(--slate-600);
-        }
-
-        .action-log {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .log-item {
-            display: flex;
-            gap: var(--space-3);
-            padding: var(--space-3);
-            border-bottom: 1px solid var(--slate-100);
-        }
-
-        .log-item:last-child {
-            border-bottom: none;
-        }
-
-        .log-time {
-            font-size: var(--text-xs);
-            color: var(--slate-500);
-            min-width: 80px;
-        }
-
-        .quick-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
             gap: var(--space-4);
-            margin-bottom: var(--space-6);
-        }
-
-        .quick-stat-card {
-            background: white;
-            border-radius: var(--radius-lg);
             padding: var(--space-4);
-            box-shadow: var(--shadow);
+            border-left: 2px solid var(--slate-100);
+            margin-left: 10px;
+            position: relative;
         }
 
-        @media (max-width: 1024px) {
-            .health-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 18px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-accent);
+        }
 
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
+        .activity-content {
+            flex: 1;
+        }
 
-            .match-item {
-                grid-template-columns: 1fr;
-            }
+        .activity-time {
+            font-size: var(--text-xs);
+            color: var(--slate-400);
         }
     </style>
 </head>
@@ -288,336 +262,267 @@
     <!-- Top Navigation -->
     <nav class="top-nav">
         <div class="nav-container">
-            <div class="logo">DESIS</div>
+            <div class="logo">DESIS HR</div>
             <div class="nav-menu">
-                <a href="#" class="active">Dashboard</a>
-                <a href="#">Matching</a>
-                <a href="#">Analytics</a>
+                <a href="#" class="active">Overview</a>
                 <a href="#">Interns</a>
-                <a href="#">Reports</a>
+                <a href="#">Applications</a>
+                <a href="#">Mentors</a>
+                <a href="#">Analytics</a>
             </div>
-            <div style="display: flex; align-items: center; gap: var(--space-4);">
-                <button class="btn btn-primary btn-sm">Run Matching</button>
-                <img src="https://ui-avatars.com/api/?name=Ankit+Shah&background=667eea&color=fff" alt="Profile"
+            <div class="nav-right">
+                <div class="notification-bell">
+                    <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Admin+HR&background=0F172A&color=fff" alt="Profile"
                     class="avatar">
             </div>
         </div>
     </nav>
 
-    <!-- Dashboard Container -->
     <div class="dashboard-container">
-        <!-- Page Header -->
-        <div style="margin-bottom: var(--space-8);">
-            <h1 style="margin-bottom: var(--space-2);">Program Dashboard</h1>
-            <p style="color: var(--slate-600);">Summer Internship 2026 • Week 3 of 8</p>
-        </div>
+        <h1 style="margin-bottom: var(--space-6);">HR Dashboard</h1>
 
-        <!-- Program Health Overview -->
-        <div class="program-health">
-            <h2 style="margin-bottom: var(--space-2);">Program Health Overview</h2>
-            <p style="color: var(--slate-600); margin-bottom: var(--space-6);">Real-time monitoring of intern
-                performance and engagement</p>
-
-            <div class="health-grid">
-                <div class="health-metric">
-                    <div class="health-value" style="color: var(--color-success);">
-                        45
-                        <span class="health-indicator" style="background: var(--color-success);"></span>
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--color-info-light); color: var(--color-info);">
+                        <i data-lucide="users"></i>
                     </div>
-                    <div class="health-label">On Track</div>
+                    <span class="stat-trend trend-up">
+                        <i data-lucide="trending-up" style="width: 12px; height: 12px;"></i>
+                        12%
+                    </span>
                 </div>
-                <div class="health-metric">
-                    <div class="health-value" style="color: var(--color-warning);">
-                        3
-                        <span class="health-indicator" style="background: var(--color-warning);"></span>
+                <div class="stat-value">124</div>
+                <div class="stat-label">Total Interns</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--color-success-light); color: var(--color-success);">
+                        <i data-lucide="check-circle"></i>
                     </div>
-                    <div class="health-label">At Risk</div>
                 </div>
-                <div class="health-metric">
-                    <div class="health-value" style="color: var(--color-error);">
-                        2
-                        <span class="health-indicator" style="background: var(--color-error);"></span>
+                <div class="stat-value">98</div>
+                <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--color-warning-light); color: var(--color-warning);">
+                        <i data-lucide="clock"></i>
                     </div>
-                    <div class="health-label">Critical</div>
                 </div>
-                <div class="health-metric">
-                    <div class="health-value">4.2/5</div>
-                    <div class="health-label">Avg Performance</div>
+                <div class="stat-value">45</div>
+                <div class="stat-label">Open Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--slate-100); color: var(--slate-600);">
+                        <i data-lucide="briefcase"></i>
+                    </div>
                 </div>
-                <div class="health-metric">
-                    <div class="health-value">87%</div>
-                    <div class="health-label">Completion Rate</div>
-                </div>
+                <div class="stat-value">32</div>
+                <div class="stat-label">Available Mentors</div>
             </div>
         </div>
 
-        <!-- Dashboard Grid -->
         <div class="dashboard-grid">
-            <!-- Main Column -->
-            <div>
-                <!-- At-Risk Interns -->
-                <div class="at-risk-section">
-                    <div
-                        style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-                        <span style="font-size: 1.5rem;">⚠️</span>
-                        <div>
-                            <strong style="color: var(--color-warning);">3 Interns Need Attention</strong>
+            <!-- Main Content -->
+            <div class="main-column">
+                <div class="card">
+                    <div class="section-header">
+                        <h3 style="margin: 0;">Recent Intern Activity</h3>
+                        <button class="btn btn-ghost btn-sm">View All</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Intern</th>
+                                    <th>University</th>
+                                    <th>Progress</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="intern-row">
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff"
+                                                class="avatar" style="width: 32px; height: 32px;">
+                                            <div>
+                                                <div style="font-weight: var(--font-medium);">Rohan Kumar</div>
+                                                <div style="font-size: var(--text-xs); color: var(--slate-400);">UI/UX
+                                                    Intern</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>IIT Delhi</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                            <div class="progress-compact">
+                                                <div class="progress-fill" style="width: 45%;"></div>
+                                            </div>
+                                            <span style="font-size: var(--text-xs);">45%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-active">Active</span></td>
+                                    <td><i data-lucide="more-horizontal"
+                                            style="cursor: pointer; color: var(--slate-400);"></i></td>
+                                </tr>
+                                <tr class="intern-row">
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <img src="https://ui-avatars.com/api/?name=Sanya+Iyer&background=10B981&color=fff"
+                                                class="avatar" style="width: 32px; height: 32px;">
+                                            <div>
+                                                <div style="font-weight: var(--font-medium);">Sanya Iyer</div>
+                                                <div style="font-size: var(--text-xs); color: var(--slate-400);">Backend
+                                                    Intern</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>BITS Pilani</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                            <div class="progress-compact">
+                                                <div class="progress-fill" style="width: 10%;"></div>
+                                            </div>
+                                            <span style="font-size: var(--text-xs);">10%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-onboarding">Onboarding</span></td>
+                                    <td><i data-lucide="more-horizontal"
+                                            style="cursor: pointer; color: var(--slate-400);"></i></td>
+                                </tr>
+                                <tr class="intern-row">
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                            <img src="https://ui-avatars.com/api/?name=Arjun+Singh&background=F59E0B&color=fff"
+                                                class="avatar" style="width: 32px; height: 32px;">
+                                            <div>
+                                                <div style="font-weight: var(--font-medium);">Arjun Singh</div>
+                                                <div style="font-size: var(--text-xs); color: var(--slate-400);">Data
+                                                    Science Intern</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>DTU</td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                            <div class="progress-compact">
+                                                <div class="progress-fill" style="width: 85%;"></div>
+                                            </div>
+                                            <span style="font-size: var(--text-xs);">85%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-review">In Review</span></td>
+                                    <td><i data-lucide="more-horizontal"
+                                            style="cursor: pointer; color: var(--slate-400);"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: var(--space-4);">Hiring Pipeline</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4);">
+                        <div
+                            style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg);">
                             <div
-                                style="font-size: var(--text-sm); color: var(--slate-600); margin-top: var(--space-1);">
-                                AI detected performance decline or engagement issues
-                            </div>
+                                style="font-size: var(--text-sm); font-weight: var(--font-medium); margin-bottom: 4px;">
+                                Screening</div>
+                            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);">12</div>
                         </div>
-                    </div>
-                    <div class="at-risk-list">
-                        <div class="at-risk-item">
-                            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                                <img src="https://ui-avatars.com/api/?name=Karthik+Reddy&background=EF4444&color=fff"
-                                    alt="Karthik" class="avatar">
-                                <div>
-                                    <strong>Karthik Reddy</strong>
-                                    <div style="font-size: var(--text-sm); color: var(--slate-600);">
-                                        Declining performance (2 weeks) • Mentor: Priya Sharma
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm">Intervene</button>
+                        <div
+                            style="padding: var(--space-4); background: var(--color-info-light); color: var(--color-info); border-radius: var(--radius-lg);">
+                            <div
+                                style="font-size: var(--text-sm); font-weight: var(--font-medium); margin-bottom: 4px;">
+                                Interviews</div>
+                            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);">8</div>
                         </div>
-                        <div class="at-risk-item">
-                            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                                <img src="https://ui-avatars.com/api/?name=Meera+Singh&background=F59E0B&color=fff"
-                                    alt="Meera" class="avatar">
-                                <div>
-                                    <strong>Meera Singh</strong>
-                                    <div style="font-size: var(--text-sm); color: var(--slate-600);">
-                                        Low task completion (40%) • Mentor: Rahul Mehta
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm">Intervene</button>
+                        <div
+                            style="padding: var(--space-4); background: var(--color-success-light); color: var(--color-success); border-radius: var(--radius-lg);">
+                            <div
+                                style="font-size: var(--text-sm); font-weight: var(--font-medium); margin-bottom: 4px;">
+                                Offers Sent</div>
+                            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);">5</div>
                         </div>
-                        <div class="at-risk-item">
-                            <div style="display: flex; align-items: center; gap: var(--space-3);">
-                                <img src="https://ui-avatars.com/api/?name=Arjun+Nair&background=EF4444&color=fff"
-                                    alt="Arjun" class="avatar">
-                                <div>
-                                    <strong>Arjun Nair</strong>
-                                    <div style="font-size: var(--text-sm); color: var(--slate-600);">
-                                        Missed 2 meetings • Mentor: Priya Sharma
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-primary btn-sm">Intervene</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AI Matching Interface -->
-                <div class="matching-interface">
-                    <h2 style="margin-bottom: var(--space-4);">🤖 AI Project Matching</h2>
-
-                    <div class="matching-controls">
-                        <button class="btn btn-primary">Run Matching Algorithm</button>
-                        <button class="btn btn-secondary">View Unmatched (8)</button>
-                        <button class="btn btn-ghost">Export Results</button>
-                    </div>
-
-                    <div
-                        style="background: var(--slate-50); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">
-                            <strong>Last Run:</strong> 2 days ago • <strong>Match Quality:</strong> 92% •
-                            <strong>Overrides:</strong> 3 of 50
-                        </div>
-                    </div>
-
-                    <h3 style="margin-bottom: var(--space-4); font-size: var(--text-lg);">Top Suggested Matches</h3>
-
-                    <div class="match-results">
-                        <div class="match-item">
-                            <div>
-                                <strong>Rohan Kumar</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-600);">Python, React • Backend
-                                    Development</div>
-                            </div>
-                            <div>
-                                <strong>Trading Analytics Dashboard</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-600);">Mentor: Priya Sharma
-                                </div>
-                            </div>
-                            <div class="match-score high">92</div>
-                            <button class="btn btn-success btn-sm">Approve</button>
-                            <button class="btn btn-ghost btn-sm">Override</button>
-                        </div>
-
-                        <div class="match-item">
-                            <div>
-                                <strong>Anjali Patel</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-600);">Python, SQL • Data
-                                    Engineering</div>
-                            </div>
-                            <div>
-                                <strong>Data Pipeline Optimization</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-600);">Mentor: Priya Sharma
-                                </div>
-                            </div>
-                            <div class="match-score high">88</div>
-                            <button class="btn btn-success btn-sm">Approve</button>
-                            <button class="btn btn-ghost btn-sm">Override</button>
-                        </div>
-
-                        <div class="match-item">
-                            <div>
-                                <strong>Siddharth Gupta</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-600);">React, Node.js • Full
-                                    Stack</div>
-                            </div>
-                            <div>
-                                <strong>Customer Portal Redesign</strong>
-                                <div style="font-size: var(--text-sm); color: var(--slate-600);">Mentor: Neha Verma
-                                </div>
-                            </div>
-                            <div class="match-score medium">76</div>
-                            <button class="btn btn-success btn-sm">Approve</button>
-                            <button class="btn btn-ghost btn-sm">Override</button>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-ghost" style="width: 100%; margin-top: var(--space-4);">
-                        View All Matches (50)
-                    </button>
-                </div>
-
-                <!-- Performance Analytics -->
-                <div class="intern-stats">
-                    <h3 style="margin-bottom: var(--space-4);">📊 Performance Trends (Weekly Avg)</h3>
-                    <div class="chart-container">
-                        <div class="chart-bar" style="height: 75%;">
-                            <span class="chart-value">3.8</span>
-                        </div>
-                        <div class="chart-bar" style="height: 82%;">
-                            <span class="chart-value">4.1</span>
-                        </div>
-                        <div class="chart-bar" style="height: 85%;">
-                            <span class="chart-value">4.2</span>
-                        </div>
-                        <div class="chart-bar" style="height: 84%; background: var(--color-accent); opacity: 0.5;">
-                            <span class="chart-value">4.2</span>
-                        </div>
-                        <div class="chart-bar" style="height: 0%; background: var(--slate-300);">
-                            <span class="chart-value" style="color: var(--slate-400);">-</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-around; margin-top: var(--space-2);">
-                        <div class="chart-label">Week 1</div>
-                        <div class="chart-label">Week 2</div>
-                        <div class="chart-label">Week 3</div>
-                        <div class="chart-label">Week 4</div>
-                        <div class="chart-label">Week 5</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sidebar Column -->
-            <div>
-                <!-- Quick Stats -->
-                <div class="quick-stats">
-                    <div class="quick-stat-card">
-                        <div
-                            style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: var(--space-2);">
-                            50</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Total Interns</div>
-                    </div>
-                    <div class="quick-stat-card">
-                        <div
-                            style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: var(--space-2);">
-                            15</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Active Mentors</div>
-                    </div>
-                    <div class="quick-stat-card">
-                        <div
-                            style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: var(--space-2);">
-                            92%</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Feedback Rate</div>
-                    </div>
-                    <div class="quick-stat-card">
-                        <div
-                            style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: var(--space-2);">
-                            38</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Days Remaining</div>
+            <!-- Sidebar -->
+            <div class="sidebar-column">
+                <div class="card">
+                    <h3 style="margin-bottom: var(--space-4);">Upcoming Events</h3>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div style="display: flex; gap: var(--space-3);">
+                            <div
+                                style="width: 48px; height: 48px; background: var(--slate-100); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <span
+                                    style="font-size: 10px; font-weight: var(--font-bold); color: var(--slate-400);">JAN</span>
+                                <span style="font-size: var(--text-lg); font-weight: var(--font-bold);">20</span>
+                            </div>
+                            <div>
+                                <div style="font-weight: var(--font-medium); font-size: var(--text-sm);">Orientation
+                                    Batch 4</div>
+                                <div style="font-size: var(--text-xs); color: var(--slate-400);">10:00 AM • Main Hall
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: var(--space-3);">
+                            <div
+                                style="width: 48px; height: 48px; background: var(--slate-100); border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <span
+                                    style="font-size: 10px; font-weight: var(--font-bold); color: var(--slate-400);">JAN</span>
+                                <span style="font-size: var(--text-lg); font-weight: var(--font-bold);">22</span>
+                            </div>
+                            <div>
+                                <div style="font-weight: var(--font-medium); font-size: var(--text-sm);">Mentor Feedback
+                                    Sync</div>
+                                <div style="font-size: var(--text-xs); color: var(--slate-400);">2:30 PM • Zoom</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- AI Insights -->
-                <div class="card"
-                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: var(--space-6);">
-                    <h3 style="margin-bottom: var(--space-4); color: white;">💡 AI Insights</h3>
-                    <div style="font-size: var(--text-sm); line-height: var(--leading-relaxed); opacity: 0.95;">
-                        <p style="margin-bottom: var(--space-3);">
-                            ✓ <strong>Data Engineering</strong> projects show highest growth (+22%)
-                        </p>
-                        <p style="margin-bottom: var(--space-3);">
-                            ⚠️ <strong>Mentors with 3+ mentees</strong> correlate with 12% lower scores
-                        </p>
-                        <p style="margin-bottom: var(--space-3);">
-                            ✓ <strong>Weekly feedback completion</strong> improves outcomes by 18%
-                        </p>
-                        <p>
-                            🎯 <strong>3 interns</strong> on track for exceptional rating (>90%)
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Recent Activity Log -->
-                <div class="action-log">
-                    <h3 style="margin-bottom: var(--space-4);">Recent Activity</h3>
-                    <div>
-                        <div class="log-item">
-                            <div class="log-time">2 min ago</div>
-                            <div style="font-size: var(--text-sm);">
-                                <strong>Priya Sharma</strong> submitted feedback for Rohan Kumar
+                <div class="card">
+                    <h3 style="margin-bottom: var(--space-4);">Platform Health</h3>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: var(--text-xs); margin-bottom: 4px;">
+                                <span>Matching Algorithm Uptime</span>
+                                <span>99.9%</span>
+                            </div>
+                            <div class="progress-compact" style="width: 100%;">
+                                <div class="progress-fill" style="width: 99.9%;"></div>
                             </div>
                         </div>
-                        <div class="log-item">
-                            <div class="log-time">15 min ago</div>
-                            <div style="font-size: var(--text-sm);">
-                                <strong>Neha Verma</strong> approved project match
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: var(--text-xs); margin-bottom: 4px;">
+                                <span>Application Response Time</span>
+                                <span>1.2s</span>
+                            </div>
+                            <div class="progress-compact" style="width: 100%;">
+                                <div class="progress-fill" style="width: 80%; background: var(--color-warning);"></div>
                             </div>
                         </div>
-                        <div class="log-item">
-                            <div class="log-time">1 hour ago</div>
-                            <div style="font-size: var(--text-sm);">
-                                <strong>System</strong> flagged 2 interns as at-risk
-                            </div>
-                        </div>
-                        <div class="log-item">
-                            <div class="log-time">2 hours ago</div>
-                            <div style="font-size: var(--text-sm);">
-                                <strong>Rahul Mehta</strong> scheduled 1:1 with Meera Singh
-                            </div>
-                        </div>
-                        <div class="log-item">
-                            <div class="log-time">3 hours ago</div>
-                            <div style="font-size: var(--text-sm);">
-                                <strong>Anjali Patel</strong> completed Week 3 milestone
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-ghost" style="width: 100%; margin-top: var(--space-4);">
-                        View All Activity
-                    </button>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="card" style="margin-top: var(--space-6);">
-                    <h3 style="margin-bottom: var(--space-4);">Quick Actions</h3>
-                    <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-                        <button class="btn btn-primary" style="width: 100%;">Schedule Presentations</button>
-                        <button class="btn btn-secondary" style="width: 100%;">Generate Report</button>
-                        <button class="btn btn-ghost" style="width: 100%;">Export Data</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 
 </html>
