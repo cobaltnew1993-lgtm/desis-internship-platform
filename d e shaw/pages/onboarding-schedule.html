@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule & Availability - DESIS Onboarding</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: var(--slate-50);
+            padding: var(--space-8) 0;
+        }
+
+        .onboarding-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .onboarding-card {
+            box-shadow: var(--shadow-lg);
+        }
+
+
+
+        .timeline-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        .timeline-title {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .timeline-weeks {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+        }
+
+        .week-block {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+
+        .week-number {
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+        }
+
+        .week-label {
+            font-size: var(--text-xs);
+            opacity: 0.9;
+        }
+
+        .location-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .location-option {
+            padding: var(--space-5);
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .location-option:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .location-option.selected {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .location-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+
+        .location-label {
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+        }
+
+        .availability-grid {
+            display: grid;
+            grid-template-columns: auto repeat(2, 1fr);
+            gap: var(--space-3);
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .day-label {
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+        }
+
+        .day-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .day-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .hours-input {
+            width: 100%;
+        }
+
+        .terms-section {
+            background: var(--slate-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .checkbox-large {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+        }
+
+        .checkbox-large input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .checkbox-large label {
+            cursor: pointer;
+            color: var(--slate-700);
+            line-height: var(--leading-relaxed);
+        }
+
+        .complete-message {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--color-success-light);
+            color: var(--color-success);
+            border-radius: var(--radius-lg);
+            font-weight: var(--font-medium);
+            margin-bottom: var(--space-6);
+            display: none;
+        }
+
+        .complete-message.show {
+            display: block;
+        }
+
+
+
+
+        /* Step number fill width overrides for this page */
+        .progress-steps.step-1::after {
+            width: 0%;
+        }
+
+        .progress-steps.step-2::after {
+            width: 25%;
+        }
+
+        .progress-steps.step-3::after {
+            width: 50%;
+        }
+
+        .progress-steps.step-4::after {
+            width: 75%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient-mesh"></div>
+
+    <div class="onboarding-container">
+        <!-- Sticky Page Header -->
+        <div class="onboarding-sticky-header" id="pageHeader">
+            <div class="container" style="max-width: 800px; display: flex; align-items: center; gap: 16px;">
+                <div class="logo" style="font-weight: 800; font-size: 20px; color: #4F46E5; letter-spacing: -0.5px;">
+                    DESIS</div>
+                <div style="height: 24px; width: 1px; background: #CBD5E1;"></div>
+                <h1 class="font-bold" style="margin: 0; font-size: var(--text-2xl);">Schedule & Availability</h1>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="onboarding-content">
+                <!-- Onboarding Card -->
+                <div class="onboarding-card fade-in">
+                    <div class="card-sticky-header">
+                        <div class="progress-steps-container">
+                            <div class="progress-steps step-4">
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Profile</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Skills</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Preferences</div>
+                                </div>
+                                <div class="progress-step active">
+                                    <div class="progress-step-circle">4</div>
+                                    <div class="progress-step-label">Schedule</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-title font-semibold"
+                            style="font-size: var(--text-lg); color: var(--slate-500); margin: 0;">Step 4: Program
+                            Planning</div>
+                    </div>
+
+                    <div class="onboarding-card-body">
+                        <form id="scheduleForm">
+                            <!-- Timeline Overview -->
+                            <div class="timeline-overview">
+                                <div class="timeline-title">8-Week Program Timeline</div>
+                                <div class="timeline-weeks">
+                                    <div class="week-block">
+                                        <div class="week-number">Week 1-2</div>
+                                        <div class="week-label">Onboarding & Training</div>
+                                    </div>
+                                    <div class="week-block">
+                                        <div class="week-number">Week 3-6</div>
+                                        <div class="week-label">Project Execution</div>
+                                    </div>
+                                    <div class="week-block">
+                                        <div class="week-number">Week 7</div>
+                                        <div class="week-label">Final Preparation</div>
+                                    </div>
+                                    <div class="week-block">
+                                        <div class="week-number">Week 8</div>
+                                        <div class="week-label">Presentations</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Internship Details -->
+                            <div class="internship-details">
+                                <div class="details-header">
+                                    <i data-lucide="briefcase" style="width: 24px; height: 24px;"></i>
+                                    <h3
+                                        style="margin: 0; font-size: var(--text-lg); font-weight: var(--font-semibold);">
+                                        Your Internship Details</h3>
+                                </div>
+                                <div class="details-grid">
+                                    <!-- Prefilled Internship Start Date -->
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label" for="internshipStartDate"><i data-lucide="calendar"
+                                                style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                                            Internship Start Date</label>
+                                        <input type="text" id="internshipStartDate" class="form-input"
+                                            value="February 1, 2026" readonly
+                                            style="background: var(--slate-100); cursor: not-allowed;">
+                                        <p class="form-help">Automatically assigned based on selection</p>
+                                    </div>
+
+                                    <!-- Prefilled Company Name -->
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label" for="companyName"><i data-lucide="building-2"
+                                                style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                                            Company</label>
+                                        <input type="text" id="companyName" class="form-input" value="Google" readonly
+                                            style="background: var(--slate-100); cursor: not-allowed;">
+                                        <p class="form-help">Based on your project preference</p>
+                                    </div>
+
+                                    <!-- Prefilled Orientation Date -->
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label" for="joiningDate"><i data-lucide="calendar-check"
+                                                style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                                            Orientation Date</label>
+                                        <input type="text" id="joiningDate" class="form-input" value="January 27, 2026"
+                                            readonly style="background: var(--slate-100); cursor: not-allowed;">
+                                        <p class="form-help">Scheduled orientation session</p>
+                                    </div>
+
+                                    <!-- Prefilled Orientation Time -->
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label class="form-label" for="joiningTime"><i data-lucide="clock"
+                                                style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                                            Orientation Time</label>
+                                        <input type="text" id="joiningTime" class="form-input" value="10:00 AM" readonly
+                                            style="background: var(--slate-100); cursor: not-allowed;">
+                                        <p class="form-help">Morning session</p>
+                                    </div>
+
+                                    <!-- Orientation Location -->
+                                    <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
+                                        <label class="form-label" for="orientationLocation"><i data-lucide="map-pin"
+                                                style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                                            Orientation Location</label>
+                                        <input type="text" id="orientationLocation" class="form-input"
+                                            value="Google India Office, Bangalore - Virtual Room Link will be shared"
+                                            readonly style="background: var(--slate-100); cursor: not-allowed;">
+                                        <p class="form-help">Location details for orientation</p>
+                                    </div>
+                                </div>
+
+                                <!-- WhatsApp Notification Checkbox -->
+                                <div class="checkbox-large"
+                                    style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--slate-200);">
+                                    <input type="checkbox" id="whatsappNotif" checked>
+                                    <label for="whatsappNotif"
+                                        style="display: flex; align-items: center; gap: var(--space-2);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-whatsapp" viewBox="0 0 16 16"
+                                            style="color: #25D366;">
+                                            <path
+                                                d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
+                                        </svg>
+                                        Send joining details on WhatsApp for easy access
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Project Preference -->
+                            <div class="form-group" style="margin-top: var(--space-6);">
+                                <label class="form-label">Project Preference (Based on your Skills) *</label>
+                                <div class="project-options" style="display: grid; gap: var(--space-4);">
+                                    <!-- Option 1 -->
+                                    <div class="project-option" data-project="AI-Powered Analytics Dashboard"
+                                        data-mentor="Priya Sharma" data-dept="AI Research Lab">
+                                        <div style="display: flex; align-items: start; gap: var(--space-3);">
+                                            <div
+                                                style="background: var(--color-primary-light); padding: 8px; border-radius: 8px; color: var(--color-primary);">
+                                                <i data-lucide="brain-circuit" style="width: 20px; height: 20px;"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; color: var(--slate-800);">AI-Powered
+                                                    Analytics Dashboard</div>
+                                                <div
+                                                    style="font-size: var(--text-sm); color: var(--slate-500); margin-top: 2px;">
+                                                    Build predictive models using Python & TensorFlow.</div>
+                                                <div
+                                                    style="font-size: var(--text-xs); color: var(--color-primary); margin-top: 4px; font-weight: 500;">
+                                                    Match: 98% (High)</div>
+                                            </div>
+                                            <div class="selection-indicator"
+                                                style="margin-left: auto; width: 20px; height: 20px; border: 2px solid var(--slate-300); border-radius: 50%;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Option 2 -->
+                                    <div class="project-option" data-project="Cloud Infrastructure Optimization"
+                                        data-mentor="Priya Sharma" data-dept="Cloud Engineering">
+                                        <div style="display: flex; align-items: start; gap: var(--space-3);">
+                                            <div
+                                                style="background: var(--color-primary-light); padding: 8px; border-radius: 8px; color: var(--color-primary);">
+                                                <i data-lucide="cloud-lightning" style="width: 20px; height: 20px;"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; color: var(--slate-800);">Cloud
+                                                    Infrastructure Optimization</div>
+                                                <div
+                                                    style="font-size: var(--text-sm); color: var(--slate-500); margin-top: 2px;">
+                                                    Optimize AWS resources and reduce latency.</div>
+                                                <div
+                                                    style="font-size: var(--text-xs); color: var(--slate-400); margin-top: 4px; font-weight: 500;">
+                                                    Match: 85% (Medium)</div>
+                                            </div>
+                                            <div class="selection-indicator"
+                                                style="margin-left: auto; width: 20px; height: 20px; border: 2px solid var(--slate-300); border-radius: 50%;">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Option 3 -->
+                                    <div class="project-option" data-project="Internal Knowledge Graph"
+                                        data-mentor="Priya Sharma" data-dept="Data Engineering">
+                                        <div style="display: flex; align-items: start; gap: var(--space-3);">
+                                            <div
+                                                style="background: var(--color-primary-light); padding: 8px; border-radius: 8px; color: var(--color-primary);">
+                                                <i data-lucide="network" style="width: 20px; height: 20px;"></i>
+                                            </div>
+                                            <div>
+                                                <div style="font-weight: 600; color: var(--slate-800);">Internal
+                                                    Knowledge Graph</div>
+                                                <div
+                                                    style="font-size: var(--text-sm); color: var(--slate-500); margin-top: 2px;">
+                                                    Map company data relationships using Neo4j.</div>
+                                                <div
+                                                    style="font-size: var(--text-xs); color: var(--slate-400); margin-top: 4px; font-weight: 500;">
+                                                    Match: 82% (Medium)</div>
+                                            </div>
+                                            <div class="selection-indicator"
+                                                style="margin-left: auto; width: 20px; height: 20px; border: 2px solid var(--slate-300); border-radius: 50%;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!-- Special Requests -->
+                            <div class="form-group">
+                                <label class="form-label" for="specialRequests">Special Requests or Accommodations
+                                    (Optional)</label>
+                                <textarea id="specialRequests" class="form-textarea"
+                                    placeholder="Any specific requirements, time zone considerations, or accessibility needs..."
+                                    rows="3"></textarea>
+                            </div>
+
+                            <!-- Terms and Conditions -->
+                            <div class="terms-section">
+                                <div class="checkbox-large">
+                                    <input type="checkbox" id="terms" required>
+                                    <label for="terms">
+                                        I agree to the <a href="#" style="color: var(--color-accent);">program terms and
+                                            conditions</a>,
+                                        including commitment to the 8-week duration, weekly feedback sessions, and final
+                                        presentation requirements.
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Complete Message -->
+                            <div class="complete-message" id="completeMessage" style="display: none;">
+                                🎉 Congratulations! Your onboarding is complete. Redirecting to dashboard...
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="onboarding-actions">
+                                <button type="button" class="btn btn-ghost" onclick="history.back()">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    Complete Onboarding 🚀
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-icon">🎉</div>
+            <h2>Congratulations!</h2>
+            <p>Your onboarding is complete</p>
+            <p class="redirect-text">Redirecting to dashboard...</p>
+        </div>
+    </div>
+
+    <script>
+        // Project selection
+        const projectOptions = document.querySelectorAll('.project-option');
+        let selectedProject = null;
+
+        projectOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                projectOptions.forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.style.borderColor = 'var(--slate-200)';
+                    opt.style.backgroundColor = 'white';
+                    opt.querySelector('.selection-indicator').style.borderColor = 'var(--slate-300)';
+                    opt.querySelector('.selection-indicator').style.backgroundColor = 'transparent';
+                });
+
+                option.classList.add('selected');
+                option.style.borderColor = 'var(--color-primary)';
+                option.style.backgroundColor = 'var(--color-primary-light)';
+                option.querySelector('.selection-indicator').style.borderColor = 'var(--color-primary)';
+                option.querySelector('.selection-indicator').style.backgroundColor = 'var(--color-primary)';
+
+                selectedProject = {
+                    name: option.dataset.project,
+                    mentor: option.dataset.mentor,
+                    dept: option.dataset.dept
+                };
+            });
+        });
+
+        // Form submission with confetti
+        document.getElementById('scheduleForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Validate project selection
+            if (!selectedProject) {
+                alert('Please select a project preference.');
+                return;
+            }
+
+            // Validate terms
+            if (!document.getElementById('terms').checked) {
+                alert('Please agree to the program terms and conditions.');
+                return;
+            }
+
+            // Collect form data
+            // Collect form data
+            const scheduleData = {
+                internshipStartDate: document.getElementById('internshipStartDate').value,
+                company: document.getElementById('companyName').value,
+                orientationDate: document.getElementById('joiningDate').value,
+                orientationTime: document.getElementById('joiningTime').value,
+                orientationLocation: document.getElementById('orientationLocation').value,
+                project: selectedProject,
+                whatsappNotifications: document.getElementById('whatsappNotif').checked,
+                specialRequests: document.getElementById('specialRequests').value
+            };
+
+            // Save success flag and data to localStorage for Dashboard to read
+            localStorage.setItem('onboardingComplete', 'true');
+            localStorage.setItem('assignedProject', JSON.stringify(selectedProject));
+
+            console.log('Onboarding complete! Schedule data:', scheduleData);
+
+            // Show success modal
+            document.getElementById('successModal').classList.add('show');
+
+            // Trigger confetti burst from center
+            confetti({
+                particleCount: 200,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Additional bursts from sides for excitement
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+            }, 200);
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+            }, 400);
+
+            // Final burst from top
+            setTimeout(() => {
+                confetti({
+                    particleCount: 150,
+                    spread: 180,
+                    origin: { y: 0 }
+                });
+            }, 600);
+
+            // Redirect to dashboard after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'intern-dashboard.html';
+            }, 3000);
+        });
+
+        // Scroll handler for sticky header shadow
+        const pageHeader = document.getElementById('pageHeader');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                pageHeader.classList.add('scrolled');
+            } else {
+                pageHeader.classList.remove('scrolled');
+            }
+        });
+
+        // Error validation with scroll and focus
+        function validateAndFocusError() {
+            const requiredFields = document.querySelectorAll('[required]');
+            for (const field of requiredFields) {
+                if (!field.value || !field.checkValidity()) {
+                    field.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                    setTimeout(() => {
+                        field.focus();
+                        field.classList.add('error');
+                    }, 500);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    </div>
+</body>
+
+</html>

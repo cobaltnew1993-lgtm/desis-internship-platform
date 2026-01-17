@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Preferences - DESIS Onboarding</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: var(--slate-50);
+            padding: var(--space-8) 0;
+        }
+
+        .onboarding-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .onboarding-card {
+            box-shadow: var(--shadow-lg);
+        }
+
+
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .project-card {
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: white;
+        }
+
+        .project-card:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .project-card.selected {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .project-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: var(--space-4);
+            background: var(--slate-100);
+        }
+
+        .project-card.selected .project-icon {
+            background: var(--color-accent);
+        }
+
+        .project-title {
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--slate-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .project-description {
+            font-size: var(--text-sm);
+            color: var(--slate-600);
+            line-height: var(--leading-relaxed);
+            margin-bottom: var(--space-3);
+        }
+
+        .project-meta {
+            display: flex;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+        }
+
+        .difficulty-badge {
+            font-size: var(--text-xs);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: var(--font-medium);
+        }
+
+        .difficulty-beginner {
+            background: var(--color-success-light);
+            color: var(--color-success);
+        }
+
+        .difficulty-intermediate {
+            background: var(--color-warning-light);
+            color: var(--color-warning);
+        }
+
+        .difficulty-advanced {
+            background: var(--color-error-light);
+            color: var(--color-error);
+        }
+
+        .selection-indicator {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--slate-300);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .project-card.selected .selection-indicator {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            color: white;
+        }
+
+        .ranking-section {
+            background: var(--slate-50);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .ranking-title {
+            font-weight: var(--font-semibold);
+            color: var(--slate-700);
+            margin-bottom: var(--space-4);
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--slate-200);
+        }
+
+        .rank-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-bold);
+            flex-shrink: 0;
+        }
+
+        .rank-name {
+            flex: 1;
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+        }
+
+        .rank-arrows {
+            display: flex;
+            gap: var(--space-1);
+        }
+
+        .rank-arrow {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--slate-300);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .rank-arrow:hover:not(:disabled) {
+            background: var(--slate-100);
+            border-color: var(--color-accent);
+        }
+
+        .rank-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .empty-ranking {
+            text-align: center;
+            padding: var(--space-8);
+            color: var(--slate-500);
+        }
+
+
+
+
+
+        /* Step number fill width overrides for this page */
+        .progress-steps.step-1::after {
+            width: 0%;
+        }
+
+        .progress-steps.step-2::after {
+            width: 25%;
+        }
+
+        .progress-steps.step-3::after {
+            width: 50%;
+        }
+
+        .progress-steps.step-4::after {
+            width: 75%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient-mesh"></div>
+
+    <div class="onboarding-container">
+        <!-- Sticky Page Header -->
+        <div class="onboarding-sticky-header" id="pageHeader">
+            <div class="container" style="max-width: 800px;">
+                <h1 class="font-bold" style="margin: 0; font-size: var(--text-2xl);">Project Preferences</h1>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="onboarding-content">
+                <!-- Onboarding Card -->
+                <div class="onboarding-card fade-in">
+                    <div class="card-sticky-header">
+                        <div class="progress-steps-container">
+                            <div class="progress-steps step-3">
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Profile</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="progress-step-circle">✓</div>
+                                    <div class="progress-step-label">Skills</div>
+                                </div>
+                                <div class="progress-step active">
+                                    <div class="progress-step-circle">3</div>
+                                    <div class="progress-step-label">Preferences</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="progress-step-circle">4</div>
+                                    <div class="progress-step-label">Schedule</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-title font-semibold"
+                            style="font-size: var(--text-lg); color: var(--slate-500); margin: 0;">Step 3: Domain
+                            Interests</div>
+                    </div>
+
+                    <div class="onboarding-card-body">
+                        <form id="preferencesForm">
+                            <!-- Project Grid -->
+                            <div class="project-grid">
+                                <!-- Full Stack Development -->
+                                <div class="project-card" data-project="fullstack">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                        <i data-lucide="code-2" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Full Stack Development</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                                        <span class="badge badge-primary">Popular</span>
+                                    </div>
+                                </div>
+
+                                <!-- Data Engineering -->
+                                <div class="project-card" data-project="data">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                                        <i data-lucide="database" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Data Engineering & Analytics</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                                    </div>
+                                </div>
+
+                                <!-- Trading Systems -->
+                                <div class="project-card" data-project="trading">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                                        <i data-lucide="trending-up" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Trading Systems & Algorithms</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                                        <span class="badge badge-info">High Impact</span>
+                                    </div>
+                                </div>
+
+                                <!-- FinTech Applications -->
+                                <div class="project-card" data-project="fintech">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white;">
+                                        <i data-lucide="credit-card" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">FinTech Applications</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+                                    </div>
+                                </div>
+
+                                <!-- Cloud Infrastructure -->
+                                <div class="project-card" data-project="cloud">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                                        <i data-lucide="cloud" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Cloud Infrastructure</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                                    </div>
+                                </div>
+
+                                <!-- Machine Learning -->
+                                <div class="project-card" data-project="ml">
+                                    <div class="selection-indicator"></div>
+                                    <div class="project-icon"
+                                        style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: white;">
+                                        <i data-lucide="brain" style="width: 20px; height: 20px;"></i>
+                                    </div>
+                                    <h4 class="project-title">Machine Learning & AI</h4>
+                                    <div class="project-meta">
+                                        <span class="difficulty-badge difficulty-advanced">Advanced</span>
+                                        <span class="badge badge-info">Emerging</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Ranking Section -->
+                            <div class="ranking-section">
+                                <div class="ranking-title">🏆 Your Top 3 Preferences (Drag to reorder)</div>
+                                <div class="ranking-list" id="rankingList">
+                                    <div class="empty-ranking">
+                                        Select at least 3 projects above to rank them
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="onboarding-actions">
+                                <button type="button" class="btn btn-ghost" onclick="history.back()">
+                                    ← Back
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    Continue →
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const projectNames = {
+                'fullstack': 'Full Stack Development',
+                'data': 'Data Engineering & Analytics',
+                'trading': 'Trading Systems & Algorithms',
+                'fintech': 'FinTech Applications',
+                'cloud': 'Cloud Infrastructure',
+                'ml': 'Machine Learning & AI'
+            };
+
+            let selectedProjects = [];
+            const maxSelections = 3;
+
+            // Project card selection
+            const projectCards = document.querySelectorAll('.project-card');
+
+            projectCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const projectId = card.dataset.project;
+
+                    if (card.classList.contains('selected')) {
+                        // Deselect
+                        card.classList.remove('selected');
+                        card.querySelector('.selection-indicator').innerHTML = '';
+                        selectedProjects = selectedProjects.filter(p => p !== projectId);
+                    } else {
+                        // Select (if under limit)
+                        if (selectedProjects.length < maxSelections) {
+                            card.classList.add('selected');
+                            card.querySelector('.selection-indicator').innerHTML = '✓';
+                            selectedProjects.push(projectId);
+                        } else {
+                            alert(`You can select a maximum of ${maxSelections} projects. Deselect one to choose another.`);
+                        }
+                    }
+
+                    updateRanking();
+                });
+            });
+
+            function updateRanking() {
+                const rankingList = document.getElementById('rankingList');
+
+                if (selectedProjects.length === 0) {
+                    rankingList.innerHTML = `
+                    <div class="empty-ranking">
+                        Select at least 3 projects above to rank them
+                    </div>
+                `;
+                    return;
+                }
+
+                rankingList.innerHTML = selectedProjects.map((projectId, index) => `
+                <div class="rank-item" data-project="${projectId}">
+                    <div class="rank-number">${index + 1}</div>
+                    <div class="rank-name">${projectNames[projectId]}</div>
+                    <div class="rank-arrows">
+                        <button type="button" class="rank-arrow" onclick="moveUp(${index})" ${index === 0 ? 'disabled' : ''}>
+                            ↑
+                        </button>
+                        <button type="button" class="rank-arrow" onclick="moveDown(${index})" ${index === selectedProjects.length - 1 ? 'disabled' : ''}>
+                            ↓
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            }
+
+            function moveUp(index) {
+                if (index > 0) {
+                    [selectedProjects[index], selectedProjects[index - 1]] = [selectedProjects[index - 1], selectedProjects[index]];
+                    updateRanking();
+                }
+            }
+
+            function moveDown(index) {
+                if (index < selectedProjects.length - 1) {
+                    [selectedProjects[index], selectedProjects[index + 1]] = [selectedProjects[index + 1], selectedProjects[index]];
+                    updateRanking();
+                }
+            }
+
+            // Form submission
+            document.getElementById('preferencesForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                if (selectedProjects.length === 0) {
+                    alert('Please select at least one project preference to continue.');
+                    return;
+                }
+
+                console.log('Selected preferences:', selectedProjects);
+                window.location.href = 'onboarding-schedule.html';
+            });
+
+            // Scroll handler for sticky header shadow
+            const pageHeader = document.getElementById('pageHeader');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 10) {
+                    pageHeader.classList.add('scrolled');
+                } else {
+                    pageHeader.classList.remove('scrolled');
+                }
+            });
+
+            // Error validation with scroll and focus
+            function validateAndFocusError() {
+                const requiredFields = document.querySelectorAll('[required]');
+                for (const field of requiredFields) {
+                    if (!field.value || !field.checkValidity()) {
+                        field.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                        setTimeout(() => {
+                            field.focus();
+                            field.classList.add('error');
+                        }, 500);
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // Initialize Lucide icons
+            lucide.createIcons();
+        </script>
+    </div>
+</body>
+
+</html>

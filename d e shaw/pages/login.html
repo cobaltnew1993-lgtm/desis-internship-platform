@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DESIS Internship Platform</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            overflow: hidden;
+        }
+
+        .login-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+
+        .login-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-12);
+            background: white;
+            position: relative;
+            z-index: 10;
+        }
+
+        .login-right {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-12);
+        }
+
+        .login-right::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .login-right::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -50px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        .login-form-wrapper {
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .login-subtitle {
+            color: var(--slate-500);
+            margin-bottom: var(--space-10);
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+
+        .role-option {
+            padding: var(--space-4);
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .role-option:hover {
+            border-color: var(--color-accent);
+            background: var(--slate-50);
+        }
+
+        .role-option.active {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+            color: var(--color-accent);
+        }
+
+        .role-icon {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-2);
+        }
+
+        .role-label {
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-wrapper label {
+            font-size: var(--text-sm);
+            color: var(--slate-600);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            font-size: var(--text-sm);
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .contact-hr {
+            text-align: center;
+            margin-top: var(--space-6);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--slate-200);
+            color: var(--slate-500);
+            font-size: var(--text-sm);
+        }
+
+        .quote-section {
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+        }
+
+        .quote-icon {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: var(--space-6);
+        }
+
+        .quote-text {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            line-height: var(--leading-snug);
+            margin-bottom: var(--space-6);
+            color: white !important;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-author {
+            font-size: var(--text-base);
+            opacity: 1;
+            font-weight: 500;
+        }
+
+        /* Dynamic quote animation */
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .quote-text.fade {
+            animation: fadeInOut 6s ease-in-out;
+        }
+
+        .program-highlights {
+            margin-top: var(--space-12);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-6);
+        }
+
+        .highlight-item {
+            text-align: center;
+        }
+
+        .highlight-number {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-2);
+        }
+
+        .highlight-label {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+        }
+
+        /* Sign In Button Animation */
+        .btn-login {
+            position: relative;
+            overflow: visible;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #667eea);
+            border-radius: inherit;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease-in;
+            animation: borderGlow 2s ease-in infinite;
+        }
+
+        @keyframes borderGlow {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                filter: blur(4px);
+            }
+
+            50% {
+                opacity: 0.6;
+                filter: blur(8px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .login-right {
+                display: none;
+            }
+
+            .login-left {
+                padding: var(--space-6);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Left Side - Login Form -->
+        <div class="login-left">
+            <div class="login-form-wrapper">
+                <!-- Logo -->
+                <div class="logo">DESIS</div>
+                <p class="login-subtitle">Welcome back! Sign in to continue your internship journey.</p>
+
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label class="form-label">I am a:</label>
+                    <div class="role-selector">
+                        <div class="role-option active" data-role="intern">
+                            <div class="role-icon"><i data-lucide="user-circle" style="width: 24px; height: 24px;"></i>
+                            </div>
+                            <div class="role-label">Intern</div>
+                        </div>
+                        <div class="role-option" data-role="mentor">
+                            <div class="role-icon"><i data-lucide="briefcase" style="width: 24px; height: 24px;"></i>
+                            </div>
+                            <div class="role-label">Mentor</div>
+                        </div>
+                        <div class="role-option" data-role="hr">
+                            <div class="role-icon"><i data-lucide="building" style="width: 24px; height: 24px;"></i>
+                            </div>
+                            <div class="role-label">HR Admin</div>
+                        </div>
+                        <div class="role-option" data-role="jury">
+                            <div class="role-icon"><i data-lucide="scale" style="width: 24px; height: 24px;"></i></div>
+                            <div class="role-label">Jury</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="your.email@desis.com"
+                            value="demo.intern@desis.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="Enter your password"
+                            value="demo123" required>
+                    </div>
+
+                    <div class="remember-forgot">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-login" style="width: 100%;">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="contact-hr">
+                    First time here? Contact HR for credentials
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Decorative -->
+        <div class="login-right">
+            <div class="quote-section">
+                <div class="quote-icon">"</div>
+                <p id="dynamicQuote" class="quote-text" style="font-weight: 500;">
+                    The internship program transformed my career. I learned, I built, and I grew into a confident
+                    engineer.
+                </p>
+                <p id="quoteAuthor" class="quote-author" style="color: white;">— Priya Sharma, SDE-2 (2024 Intern)
+                </p>
+
+                <div class="program-highlights">
+                    <div class="highlight-item">
+                        <div class="highlight-number">8</div>
+                        <div class="highlight-label">Weeks</div>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-number">500+</div>
+                        <div class="highlight-label">Interns</div>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-number">100%</div>
+                        <div class="highlight-label">Success</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Role selection
+        const roleOptions = document.querySelectorAll('.role-option');
+        let selectedRole = 'intern';
+
+        roleOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                roleOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                selectedRole = option.dataset.role;
+            });
+        });
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Simulate login based on role
+            console.log('Logging in as:', selectedRole);
+            console.log('Email:', email);
+
+            // Redirect based on role
+            const redirects = {
+                'intern': 'onboarding-profile.html',  // Interns go to onboarding first
+                'mentor': 'mentor-dashboard.html',
+                'hr': 'hr-dashboard.html',
+                'jury': 'evaluation-form.html'
+            };
+
+            // Redirect to appropriate page
+            window.location.href = redirects[selectedRole];
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Add floating animation keyframe if not already in CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-20px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Dynamic motivational quotes
+        const quotes = [
+            {
+                text: "The internship program transformed my career. I learned, I built, and I grew into a confident engineer.",
+                author: "— Priya Sharma, SDE-2 (2024 Intern)"
+            },
+            {
+                text: "Every line of code I wrote here brought me closer to my dream job. The mentorship was life-changing.",
+                author: "— Rohan Kumar, SDE @Google (2023 Intern)"
+            },
+            {
+                text: "From a nervous beginner to a confident developer - this 8-week journey exceeded all my expectations.",
+                author: "— Ananya Mehta, SDE @Microsoft (2024 Intern)"
+            },
+            {
+                text: "Real projects, real impact, real growth. DESIS gave me the confidence to ace every technical interview.",
+                author: "— Arjun Patel, Data Engineer @Amazon (2023 Intern)"
+            },
+            {
+                text: "The hands-on experience and expert guidance turned my theoretical knowledge into practical skills.",
+                author: "— Neha Gupta, ML Engineer @Meta (2024 Intern)"
+            },
+            {
+                text: "I came for the internship, I stayed for the mentorship. Today, I'm building products used by millions.",
+                author: "— Vikram Singh, Product Manager @Apple (2023 Intern)"
+            }
+        ];
+
+        let currentQuoteIndex = 0;
+        const quoteElement = document.getElementById('dynamicQuote');
+        const authorElement = document.getElementById('quoteAuthor');
+
+        function rotateQuote() {
+            // Add fade class for animation
+            quoteElement.classList.add('fade');
+
+            // Change quote after fade out
+            setTimeout(() => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                quoteElement.textContent = quotes[currentQuoteIndex].text;
+                authorElement.textContent = quotes[currentQuoteIndex].author;
+
+                // Remove and re-add class to restart animation
+                quoteElement.classList.remove('fade');
+                setTimeout(() => quoteElement.classList.add('fade'), 10);
+            }, 3000); // Change after 3 seconds (mid-animation)
+        }
+
+        // Rotate quotes every 6 seconds
+        setInterval(rotateQuote, 6000);
+
+        // Start first animation
+        setTimeout(() => quoteElement.classList.add('fade'), 100);
+    </script>
+</body>
+
+</html>

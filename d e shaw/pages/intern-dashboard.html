@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DESIS Internship Platform</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background: var(--slate-50);
+            padding-top: 80px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            padding: var(--space-4) 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--space-6);
+            align-items: center;
+        }
+
+        .nav-menu a {
+            font-weight: var(--font-medium);
+            color: var(--slate-600);
+            transition: color 0.2s ease;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--color-accent);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--slate-600);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 16px;
+            height: 16px;
+            background: var(--color-error);
+            border-radius: 50%;
+            font-size: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--slate-200);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .avatar:hover {
+            border-color: var(--color-accent);
+            transform: scale(1.05);
+        }
+
+        /* Profile Drawer */
+        .profile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .profile-drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .profile-drawer {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: var(--shadow-2xl);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-drawer.active {
+            right: 0;
+        }
+
+        .drawer-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--slate-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--slate-100);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .drawer-close:hover {
+            background: var(--slate-200);
+        }
+
+        .drawer-profile {
+            padding: var(--space-6);
+            text-align: center;
+            border-bottom: 1px solid var(--slate-200);
+        }
+
+        .drawer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-3);
+            border: 3px solid var(--color-accent);
+        }
+
+        .drawer-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4) 0;
+        }
+
+        .drawer-menu-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-4) var(--space-6);
+            color: var(--slate-700);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: var(--text-base);
+        }
+
+        .drawer-menu-item:hover {
+            background: var(--slate-50);
+            color: var(--color-accent);
+        }
+
+        .drawer-menu-item.logout {
+            color: var(--color-error);
+        }
+
+        .drawer-menu-item.logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Logout Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-2xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--space-4);
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-error);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-6);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        .welcome-text {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-3);
+        }
+
+        .week-info {
+            font-size: var(--text-lg);
+            opacity: 0.95;
+            margin-bottom: var(--space-6);
+        }
+
+        .program-progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            margin-top: var(--space-4);
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--space-6);
+        }
+
+        .main-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .sidebar-column {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--slate-900);
+            margin-bottom: var(--space-4);
+        }
+
+        .project-card-large {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--space-6);
+        }
+
+        .project-info h3 {
+            font-size: var(--text-2xl);
+            margin-bottom: var(--space-2);
+        }
+
+        .project-tags {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .mentor-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            background: var(--slate-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+        }
+
+        .milestone-item {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            border-left: 3px solid var(--slate-200);
+            margin-bottom: var(--space-3);
+            transition: all 0.2s ease;
+        }
+
+        .milestone-item:hover {
+            border-left-color: var(--color-accent);
+            background: var(--slate-50);
+        }
+
+        .milestone-item.completed {
+            border-left-color: var(--color-success);
+        }
+
+        .milestone-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--slate-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .milestone-item.completed .milestone-icon {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            transition: background 0.2s ease;
+        }
+
+        .task-item:hover {
+            background: var(--slate-50);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+        }
+
+        .task-meta {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-1);
+            font-size: var(--text-xs);
+            color: var(--slate-500);
+        }
+
+        .feedback-timeline {
+            position: relative;
+        }
+
+        .feedback-item {
+            position: relative;
+            padding-left: var(--space-8);
+            padding-bottom: var(--space-6);
+        }
+
+        .feedback-item::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 24px;
+            bottom: 0;
+            width: 2px;
+            background: var(--slate-200);
+        }
+
+        .feedback-item:last-child::before {
+            display: none;
+        }
+
+        .feedback-dot {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            border: 4px solid var(--slate-50);
+            box-shadow: 0 0 0 2px var(--color-accent);
+        }
+
+        .feedback-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .rating-stars {
+            color: var(--color-warning);
+        }
+
+        .resource-card {
+            display: flex;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            background: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .resource-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .calendar-widget {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: var(--space-4);
+            font-weight: var(--font-semibold);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-1);
+            text-align: center;
+        }
+
+        .calendar-day {
+            padding: var(--space-2);
+            font-size: var(--text-sm);
+            border-radius: var(--radius-sm);
+        }
+
+        .calendar-day.today {
+            background: var(--color-accent);
+            color: white;
+            font-weight: var(--font-bold);
+        }
+
+        .calendar-day.has-event {
+            background: var(--color-success-light);
+        }
+
+        .event-list {
+            margin-top: var(--space-4);
+        }
+
+        .event-item {
+            padding: var(--space-3);
+            border-left: 3px solid var(--color-accent);
+            margin-bottom: var(--space-3);
+            background: var(--slate-50);
+            font-size: var(--text-sm);
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Profile Drawer Overlay -->
+    <div class="profile-drawer-overlay" id="profileDrawerOverlay"></div>
+
+    <!-- Profile Drawer -->
+    <div class="profile-drawer" id="profileDrawer">
+        <div class="drawer-header">
+            <h3 style="margin: 0; font-size: var(--text-lg);">Profile Menu</h3>
+            <button class="drawer-close" id="drawerClose">
+                <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+            </button>
+        </div>
+
+        <div class="drawer-profile">
+            <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff" alt="Profile"
+                class="drawer-avatar">
+            <h4 style="margin-bottom: var(--space-1);">Rohan Kumar</h4>
+            <p style="font-size: var(--text-sm); color: var(--slate-500);">rohan.kumar@iitdelhi.ac.in</p>
+        </div>
+
+        <div class="drawer-menu">
+            <a href="#" class="drawer-menu-item">
+                <i data-lucide="user" style="width: 20px; height: 20px;"></i>
+                <span>View Profile</span>
+            </a>
+            <a href="#" class="drawer-menu-item">
+                <i data-lucide="settings" style="width: 20px; height: 20px;"></i>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="drawer-menu-item">
+                <i data-lucide="bell" style="width: 20px; height: 20px;"></i>
+                <span>Notifications</span>
+            </a>
+            <a href="#" class="drawer-menu-item">
+                <i data-lucide="help-circle" style="width: 20px; height: 20px;"></i>
+                <span>Help & Support</span>
+            </a>
+            <div style="border-top: 1px solid var(--slate-200); margin: var(--space-4) 0;"></div>
+            <button class="drawer-menu-item logout" id="logoutBtn">
+                <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal-overlay" id="logoutModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i data-lucide="log-out" style="width: 30px; height: 30px;"></i>
+                </div>
+                <h3 style="margin-bottom: var(--space-2);">Confirm Logout</h3>
+                <p style="color: var(--slate-600); font-size: var(--text-sm);">
+                    Are you sure you want to logout? You'll need to sign in again to access your dashboard.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" id="cancelLogout" style="flex: 1;">Cancel</button>
+                <button class="btn" id="confirmLogout"
+                    style="flex: 1; background: var(--color-error); color: white;">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo"
+                style="font-family: var(--font-sans); font-weight: 800; font-size: 20px; color: #4F46E5; letter-spacing: -0.5px;">
+                DESIS</div>
+            <div class="nav-menu">
+                <a href="#" class="active">Dashboard</a>
+                <a href="#">Projects</a>
+                <a href="#">Learning</a>
+                <a href="#">Feedback</a>
+                <a href="#">Help</a>
+            </div>
+            <div class="nav-right" style="display: flex; align-items: center; gap: var(--space-4);">
+                <a href="leaderboard.html" class="rank-badge"
+                    style="display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-4); background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: var(--radius-full); color: white; font-weight: var(--font-semibold); font-size: var(--text-sm); text-decoration: none; transition: all 0.2s ease;"
+                    onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <i data-lucide="trophy" style="width: 16px; height: 16px;"></i>
+                    <span>#12</span>
+                </a>
+                <div class="notification-bell"
+                    style="position: relative; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; cursor: pointer;">
+                    <i data-lucide="bell" style="width: 20px; height: 20px; color: var(--slate-600);"></i>
+                    <span class="notification-badge"
+                        style="position: absolute; top: 0; right: 0; background: var(--color-error); color: white; font-size: 10px; font-weight: bold; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid white;">3</span>
+                </div>
+                <div style="cursor: pointer; border-radius: 50%; padding: 2px; border: 2px solid transparent; transition: all 0.2s ease;"
+                    id="profileAvatarContainer">
+                    <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff" alt="Profile"
+                        class="avatar" id="profileAvatar" style="display: block;">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Compact Welcome Banner with Two-Column Layout -->
+        <div class="welcome-banner"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: var(--space-8); border-radius: 20px; color: white;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: stretch;">
+                <!-- Left Column: Welcome & Progress -->
+                <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h1 class="welcome-text"
+                            style="font-size: 24px; margin-bottom: var(--space-2); font-weight: 700; line-height: 1.2; display: flex; align-items: center; gap: var(--space-2); color: white;">
+                            Good afternoon, Rohan! <i data-lucide="hand"
+                                style="width: 24px; height: 24px; color: white;"></i>
+                        </h1>
+                        <div class="week-info" style="margin-bottom: var(--space-6); color: rgba(255, 255, 255, 0.9);">
+                            You're in Week 3 of 8 - Keep up the great work!
+                        </div>
+                    </div>
+
+                    <div class="program-progress"
+                        style="background: rgba(255, 255, 255, 0.2); padding: var(--space-4); border-radius: var(--radius-xl); backdrop-filter: blur(8px);">
+                        <div class="progress-label"
+                            style="display: flex; justify-content: space-between; margin-bottom: var(--space-2); color: white; font-weight: 500; font-size: var(--text-sm);">
+                            <span>Program Progress</span>
+                            <span>37.5%</span>
+                        </div>
+                        <div class="progress-bar"
+                            style="background: rgba(255, 255, 255, 0.5); height: 8px; border-radius: 4px; overflow: hidden;">
+                            <div class="progress-fill"
+                                style="width: 37.5%; background: var(--color-accent); height: 100%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: AI Chat -->
+                <div
+                    style="background: white; border-radius: 20px; padding: var(--space-6); box-shadow: 0 4px 6px rgba(0,0,0,0.1); color: var(--slate-900);">
+                    <h4
+                        style="margin-bottom: var(--space-3); color: var(--slate-900); display: flex; align-items: center; gap: var(--space-2); font-size: 1rem; font-weight: 600;">
+                        <i data-lucide="sparkles" style="width: 18px; height: 18px; color: var(--color-accent);"></i>
+                        Ask AI for Help
+                    </h4>
+                    <p style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-4);">
+                        Got questions about the program or your project?
+                    </p>
+                    <div style="position: relative;">
+                        <i data-lucide="message-circle"
+                            style="position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--slate-400);"></i>
+                        <input type="text" class="form-input" id="aiChatInput" placeholder="Ask a question..."
+                            style="padding-left: var(--space-10); font-size: var(--text-sm); width: 100%; border-radius: var(--radius-full);">
+                        <button class="btn btn-sm btn-accent"
+                            style="position: absolute; right: var(--space-2); top: 50%; transform: translateY(-50%); border-radius: 50%; width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center;"
+                            id="aiSendBtn">
+                            <i data-lucide="send" style="width: 14px; height: 14px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Main Column -->
+            <div class="main-column">
+                <!-- Your Project -->
+                <div class="project-card-large">
+                    <div class="section-title">Your Project</div>
+
+                    <div class="project-header">
+                        <div class="project-info">
+                            <h3>Real-Time Trading Analytics Dashboard</h3>
+                            <div class="project-tags">
+                                <span class="badge badge-info">Trading Systems</span>
+                                <span class="badge badge-primary">Full Stack</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary" style="padding: 0.55rem 1.5rem; font-size: 14px;">View
+                            Details</a>
+                    </div>
+
+                    <div class="mentor-info">
+                        <img src="https://ui-avatars.com/api/?name=Priya+Sharma&background=10B981&color=fff"
+                            alt="Mentor" class="avatar">
+                        <div>
+                            <div style="font-weight: var(--font-semibold);">Priya Sharma</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-600);">Senior Engineer • Your
+                                Mentor</div>
+                        </div>
+                        <button class="btn btn-ghost btn-sm" style="margin-left: auto;">Message</button>
+                    </div>
+
+                    <div>
+                        <strong style="display: block; margin-bottom: var(--space-3);">Project Progress: 45%</strong>
+                        <div class="progress-bar" style="margin-bottom: var(--space-6);">
+                            <div class="progress-fill" style="width: 45%; background: var(--color-success);"></div>
+                        </div>
+
+                        <strong style="display: block; margin-bottom: var(--space-3);">Milestones</strong>
+                        <div class="milestone-item completed"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <div class="milestone-icon">✓</div>
+                                <div>
+                                    <div style="font-weight: var(--font-medium);">Project Setup & Architecture</div>
+                                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Completed Week 1
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-remind" data-tooltip="Remind mentor for feedback"
+                                onclick="this.innerHTML='<i data-lucide=\'check\' style=\'width:12px; height:12px;\'></i> Sent'; this.style.color='var(--color-success)'; this.disabled=true; this.removeAttribute('data-tooltip');"
+                                style="background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:500; cursor:pointer; padding:4px 8px; border-radius:4px; display:flex; align-items:center; gap:4px; transition:all 0.2s; white-space: nowrap;">
+                                Remind Mentor
+                            </button>
+                        </div>
+                        <div class="milestone-item completed"
+                            style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                <div class="milestone-icon">✓</div>
+                                <div>
+                                    <div style="font-weight: var(--font-medium);">API Integration</div>
+                                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Completed Week 2
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn-remind" data-tooltip="Remind mentor for feedback"
+                                onclick="this.innerHTML='<i data-lucide=\'check\' style=\'width:12px; height:12px;\'></i> Sent'; this.style.color='var(--color-success)'; this.disabled=true; this.removeAttribute('data-tooltip');"
+                                style="background:none; border:none; color:var(--color-primary); font-size:12px; font-weight:500; cursor:pointer; padding:4px 8px; border-radius:4px; display:flex; align-items:center; gap:4px; transition:all 0.2s; white-space: nowrap;">
+                                Remind Mentor
+                            </button>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">→</div>
+                            <div>
+                                <div style="font-weight: var(--font-medium);">Dashboard UI Development</div>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Due Week 4</div>
+                            </div>
+                        </div>
+                        <div class="milestone-item">
+                            <div class="milestone-icon">○</div>
+                            <div>
+                                <div style="font-weight: var(--font-medium);">Real-time Data Streaming</div>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Due Week 5</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- This Week's Tasks -->
+                <div class="card">
+                    <div class="section-title">This Week's Tasks</div>
+                    <ul class="task-list">
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-content">
+                                <div class="task-title">Complete dashboard wireframes</div>
+                                <div class="task-meta">
+                                    <span class="badge badge-warning">High Priority</span>
+                                    <span>Due: Tomorrow</span>
+
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+                                <span style="font-size: 12px; color: var(--slate-400);">📝 Added by mentor</span>
+                                <button
+                                    style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px;"
+                                    disabled>
+                                    <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                                    Upload
+                                </button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div class="task-content">
+                                <div class="task-title completed" style="text-decoration: line-through; opacity: 0.6;">
+                                    Review API
+                                    documentation</div>
+                                <div class="task-meta">
+                                    <span style="color: var(--color-success);">✓ Completed</span>
+
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+                                <span style="font-size: 12px; color: var(--slate-400);">📝 Added by mentor</span>
+                                <button
+                                    style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px;"
+                                    id="uploadBtn">
+                                    <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                                    Upload
+                                </button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-content">
+                                <div class="task-title">Implement data visualization component</div>
+                                <div class="task-meta">
+                                    <span class="badge badge-info">Medium</span>
+                                    <span>Due: Friday</span>
+
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+                                <span style="font-size: 12px; color: var(--slate-400);">📝 Added by mentor</span>
+                                <button
+                                    style="background: none; border: none; padding: 0; color: var(--color-primary); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px;"
+                                    disabled>
+                                    <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
+                                    Upload
+                                </button>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-content">
+                                <div class="task-title">1:1 meeting with Priya</div>
+                                <div class="task-meta">
+                                    <span>📅 Thursday 3 PM</span>
+                                    <span style="color: var(--slate-400); margin-left: auto;">📝 Added by mentor</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-content">
+                                <div class="task-title">Submit weekly progress report</div>
+                                <div class="task-meta">
+                                    <span>Due: Friday</span>
+                                    <span style="color: var(--slate-400); margin-left: auto;">📝 Added by mentor</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Recent Feedback -->
+                <div class="card">
+                    <div class="section-title">Recent Feedback</div>
+                    <div class="feedback-timeline">
+                        <div class="feedback-item">
+                            <div class="feedback-dot"></div>
+                            <div class="feedback-card">
+                                <div class="feedback-header">
+                                    <div>
+                                        <strong>Week 3 Check-in</strong>
+                                        <div style="font-size: var(--text-sm); color: var(--slate-500);">2 days ago
+                                        </div>
+                                    </div>
+                                    <div class="rating-stars">★★★★★</div>
+                                </div>
+                                <p
+                                    style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
+                                    Great progress on API integration! Your code quality is improving. Focus on error
+                                    handling and edge cases for next week.
+                                </p>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">- Priya Sharma</div>
+                            </div>
+                        </div>
+
+                        <div class="feedback-item">
+                            <div class="feedback-dot" style="background: var(--color-success);"></div>
+                            <div class="feedback-card">
+                                <div class="feedback-header">
+                                    <div>
+                                        <strong>Week 2 Review</strong>
+                                        <div style="font-size: var(--text-sm); color: var(--slate-500);">1 week ago
+                                        </div>
+                                    </div>
+                                    <div class="rating-stars">★★★★☆</div>
+                                </div>
+                                <p
+                                    style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
+                                    Solid understanding of the project requirements. Looking forward to seeing the
+                                    implementation.
+                                </p>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">- Priya Sharma</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-ghost" style="width: 100%; margin-top: var(--space-3);">
+                        View All Feedback
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sidebar Column -->
+            <div class="sidebar-column">
+                <!-- Calendar -->
+
+
+                <!-- Upcoming Events -->
+                <div class="card">
+                    <div class="section-title">Upcoming Events</div>
+                    <div class="event-list">
+                        <div class="event-item">
+                            <div style="font-weight: var(--font-medium);">1:1 with Priya</div>
+                            <div
+                                style="color: var(--slate-500); font-size: var(--text-xs); margin-top: var(--space-1);">
+                                📅 Thursday, Jan 20 • 3:00 PM
+                            </div>
+                        </div>
+                        <div class="event-item" style="border-left-color: var(--color-warning);">
+                            <div style="font-weight: var(--font-medium);">Leadership Talk</div>
+                            <div
+                                style="color: var(--slate-500); font-size: var(--text-xs); margin-top: var(--space-1);">
+                                📅 Friday, Jan 21 • 11:00 AM
+                            </div>
+                        </div>
+                        <div class="event-item" style="border-left-color: var(--color-success);">
+                            <div style="font-weight: var(--font-medium);">Team Activity</div>
+                            <div
+                                style="color: var(--slate-500); font-size: var(--text-xs); margin-top: var(--space-1);">
+                                📅 Friday, Jan 21 • 4:00 PM
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Resources -->
+                <div class="card">
+                    <div class="section-title">Recommended for You</div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon" style="background: var(--color-info-light);">
+                            📚
+                        </div>
+                        <div>
+                            <div style="font-weight: var(--font-medium); margin-bottom: var(--space-1);">Advanced SQL
+                                Optimization</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-500);">3 hours • Intermediate
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon" style="background: var(--color-warning-light);">
+                            🎥
+                        </div>
+                        <div>
+                            <div style="font-weight: var(--font-medium); margin-bottom: var(--space-1);">Real-Time
+                                Dashboards</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-500);">2 hours • Advanced</div>
+                        </div>
+                    </div>
+
+                    <div class="resource-card">
+                        <div class="resource-icon" style="background: var(--color-success-light);">
+                            💻
+                        </div>
+                        <div>
+                            <div style="font-weight: var(--font-medium); margin-bottom: var(--space-1);">WebSocket
+                                Communication</div>
+                            <div style="font-size: var(--text-xs); color: var(--slate-500);">1.5 hours • Intermediate
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#" class="btn btn-accent" style="width: 100%; margin-top: var(--space-3);">
+                        Browse All Resources
+                    </a>
+                </div>
+
+                <!-- Internship Leaderboard Header -->
+                <div style="text-align: center; margin-bottom: var(--space-4); margin-top: var(--space-6);">
+                    <div
+                        style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: #EEF2FF; color: #4F46E5; border-radius: 50%; margin-bottom: var(--space-2);">
+                        <i data-lucide="trophy" style="width: 28px; height: 28px;"></i>
+                    </div>
+                    <h3 style="font-size: 20px; font-weight: 700; color: var(--slate-900); margin: 0 0 4px 0;">
+                        Internship Leaderboard</h3>
+                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Batch 15 (Feb 26 to Jul 26)</div>
+                </div>
+
+                <!-- Performance Card -->
+                <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div
+                        style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: var(--space-2);">
+                        #12
+                    </div>
+                    <div style="font-size: var(--text-lg); margin-bottom: var(--space-1);">Your Ranking</div>
+                    <div style="opacity: 0.9; font-size: var(--text-sm);">Out of 50 interns</div>
+                    <div
+                        style="margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid rgba(255,255,255,0.2);">
+                        <div style="font-size: var(--text-sm); opacity: 0.9;">Average Score: <strong>4.2/5</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar (Moved Here) -->
+                <div class="calendar-widget" style="margin-top: var(--space-6);">
+                    <div class="calendar-header">January 2026</div>
+                    <div class="calendar-grid">
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            S</div>
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            M</div>
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            T</div>
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            W</div>
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            T</div>
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            F</div>
+                        <div
+                            style="font-weight: var(--font-semibold); font-size: var(--text-xs); color: var(--slate-500);">
+                            S</div>
+
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day"></div>
+                        <div class="calendar-day">1</div>
+                        <div class="calendar-day">2</div>
+                        <div class="calendar-day">3</div>
+                        <div class="calendar-day">4</div>
+                        <div class="calendar-day">5</div>
+                        <div class="calendar-day">6</div>
+                        <div class="calendar-day">7</div>
+                        <div class="calendar-day">8</div>
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day">10</div>
+                        <div class="calendar-day">11</div>
+                        <div class="calendar-day">12</div>
+                        <div class="calendar-day">13</div>
+                        <div class="calendar-day">14</div>
+                        <div class="calendar-day">15</div>
+                        <div class="calendar-day has-event">16</div>
+                        <div class="calendar-day today">17</div>
+                        <div class="calendar-day">18</div>
+                        <div class="calendar-day">19</div>
+                        <div class="calendar-day has-event">20</div>
+                        <div class="calendar-day">21</div>
+                        <div class="calendar-day">22</div>
+                        <div class="calendar-day">23</div>
+                        <div class="calendar-day">24</div>
+                        <div class="calendar-day">25</div>
+                        <div class="calendar-day">26</div>
+                        <div class="calendar-day">27</div>
+                        <div class="calendar-day">28</div>
+                        <div class="calendar-day">29</div>
+                        <div class="calendar-day">30</div>
+                        <div class="calendar-day">31</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <!-- Related Topic Videos Section -->
+        <div class="card" style="margin-top: var(--space-6);">
+            <div class="section-title"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                    <i data-lucide="play-circle" style="width: 20px; height: 20px;"></i>
+                    Related Topic Videos
+                </div>
+                <!-- View All CTA -->
+                <a href="#" class="btn btn-sm btn-ghost" style="color: var(--color-primary);">
+                    View All
+                </a>
+            </div>
+
+            <!-- Horizontal Scroll Container -->
+            <div
+                style="display: flex; overflow-x: auto; gap: var(--space-4); padding-bottom: var(--space-4); scrollbar-width: thin;">
+                <!-- Video 1 -->
+                <div style="flex: 0 0 50%; min-width: 280px;">
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--slate-900); margin-bottom: var(--space-2);">
+                        <video controls poster="../images/hero-1.png"
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                            <source src="#" type="video/mp4">
+                        </video>
+                    </div>
+                    <div style="font-weight: var(--font-medium); font-size: var(--text-sm);">Task Introduction</div>
+                    <div style="font-size: var(--text-xs); color: var(--slate-500);">5 mins • Getting Started</div>
+                </div>
+
+                <!-- Video 2 -->
+                <div style="flex: 0 0 50%; min-width: 280px;">
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--slate-200); margin-bottom: var(--space-2); display: flex; align-items: center; justify-content: center;">
+                        <div
+                            style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); cursor: pointer;">
+                            <i data-lucide="play" style="width: 32px; height: 32px; color: white; fill: white;"></i>
+                        </div>
+                    </div>
+                    <div style="font-weight: var(--font-medium); font-size: var(--text-sm);">Advanced Concepts</div>
+                    <div style="font-size: var(--text-xs); color: var(--slate-500);">12 mins • Deep Dive</div>
+                </div>
+                <!-- Video 3 -->
+                <div style="flex: 0 0 50%; min-width: 280px;">
+                    <div
+                        style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-md); background: var(--slate-200); margin-bottom: var(--space-2); display: flex; align-items: center; justify-content: center;">
+                        <div
+                            style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); cursor: pointer;">
+                            <i data-lucide="play" style="width: 32px; height: 32px; color: white; fill: white;"></i>
+                        </div>
+                    </div>
+                    <div style="font-weight: var(--font-medium); font-size: var(--text-sm);">Expert Tips</div>
+                    <div style="font-size: var(--text-xs); color: var(--slate-500);">8 mins • Best Practices</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browse Past Projects Section -->
+        <div class="card" style="margin-top: var(--space-6);">
+            <div class="section-title" style="display: flex; align-items: center; gap: var(--space-2);">
+                <i data-lucide="folder-search" style="width: 20px; height: 20px;"></i>
+                Browse Past Projects
+            </div>
+            <p style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-4);">
+                Get inspired by previous interns' work and understand project expectations.
+            </p>
+            <div style="position: relative;">
+                <i data-lucide="search"
+                    style="position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--slate-400);"></i>
+                <input type="text" class="form-input" placeholder="Search by technology, domain, or keyword..."
+                    style="padding-left: var(--space-10); font-size: var(--text-sm);">
+            </div>
+        </div>
+
+        <!-- Partner Universities Section -->
+        <div class="card" style="margin-top: var(--space-6);">
+            <div class="section-title">Partner Universities</div>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-6); text-align: center;">
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
+                    Stanford University
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
+                    MIT
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
+                    IIT Delhi
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
+                    Harvard
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="graduation-cap" style="width: 20px; height: 20px;"></i>
+                    Berkeley
+                </div>
+            </div>
+        </div>
+
+        <!-- Placement Partners Section -->
+        <div class="card" style="margin-top: var(--space-6);">
+            <div class="section-title">Where Our Interns Go</div>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-6); text-align: center;">
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
+                    Google
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
+                    Meta
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
+                    Apple
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
+                    Amazon
+                </div>
+                <div
+                    style="padding: var(--space-4); background: var(--slate-50); border-radius: var(--radius-lg); font-weight: 600; color: var(--slate-600); display: flex; align-items: center; justify-content: center; gap: var(--space-2);">
+                    <i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
+                    Microsoft
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Reviews Section -->
+        <div class="card" style="margin-top: var(--space-6);">
+            <div class="section-title">What Our Interns Say</div>
+            <div
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-6);">
+                <!-- Review 1 -->
+                <div
+                    style="padding: var(--space-6); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <p
+                        style="font-style: italic; color: var(--slate-700); margin-bottom: var(--space-6); line-height: 1.6;">
+                        "The mentorship I received at DESIS was life-changing. I worked on production-level AI models
+                        that are now used by millions."
+                    </p>
+                    <div style="display: flex; align-items: center; gap: var(--space-4);">
+                        <div
+                            style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="user" style="width: 24px; height: 24px; color: white;"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--slate-900);">Rohan Kumar</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">IIT Delhi • SDE Intern @
+                                Google</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 2 -->
+                <div
+                    style="padding: var(--space-6); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <p
+                        style="font-style: italic; color: var(--slate-700); margin-bottom: var(--space-6); line-height: 1.6;">
+                        "Best 8 weeks of my summer! The peer learning environment and the AI-powered dashboards made
+                        everything so efficient."
+                    </p>
+                    <div style="display: flex; align-items: center; gap: var(--space-4);">
+                        <div
+                            style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="user" style="width: 24px; height: 24px; color: white;"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--slate-900);">Priya Sharma</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">Stanford • Product Intern @
+                                Meta</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div
+                    style="padding: var(--space-6); background: white; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                    <p
+                        style="font-style: italic; color: var(--slate-700); margin-bottom: var(--space-6); line-height: 1.6;">
+                        "Transparent evaluation and real-world projects. I secured my full-time offer before the
+                        internship even ended!"
+                    </p>
+                    <div style="display: flex; align-items: center; gap: var(--space-4);">
+                        <div
+                            style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center;">
+                            <i data-lucide="user" style="width: 24px; height: 24px; color: white;"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--slate-900);">Alex Chen</div>
+                            <div style="font-size: var(--text-sm); color: var(--slate-500);">MIT • Data Scientist @
+                                Amazon</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Actions Container -->
+    <div
+        style="position: fixed; bottom: 32px; right: 32px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 16px;">
+
+        <!-- Online Friends Toggle -->
+        <button id="friendsToggle"
+            style="width: 56px; height: 56px; border-radius: 50%; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease;"
+            onclick="toggleFriendsSidebar()" onmouseover="this.style.transform='scale(1.05)'"
+            onmouseout="this.style.transform='scale(1)'">
+            <i data-lucide="users" style="width: 24px; height: 24px; color: var(--slate-700);"></i>
+            <span
+                style="position: absolute; top: 0; right: 0; width: 14px; height: 14px; background: #10B981; border: 2px solid white; border-radius: 50%;"></span>
+        </button>
+
+        <!-- Customer Care Widget (The "SU" Avatar) -->
+        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 8px 16px 8px 8px; border-radius: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; transition: transform 0.2s ease;"
+            onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+            <div style="position: relative;">
+                <div
+                    style="width: 40px; height: 40px; background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 16px;">
+                    SU</div>
+                <div
+                    style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #10B981; border: 2px solid white; border-radius: 50%;">
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: column;">
+                <span style="font-weight: 600; font-size: 14px; color: var(--slate-900);">Support</span>
+                <span style="font-size: 12px; color: var(--slate-500);">Online</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Sidebar (Dark Theme to match reference) -->
+    <div id="friendsSidebar"
+        style="position: fixed; top: 80px; right: -320px; width: 320px; bottom: 0; background: #18181b; color: white; border-left: 1px solid #27272a; z-index: 990; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: -4px 0 15px rgba(0,0,0,0.5);">
+
+        <!-- Header -->
+        <div
+            style="padding: 20px; border-bottom: 1px solid #27272a; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.5px;">Contacts</h3>
+            <button onclick="toggleFriendsSidebar()"
+                style="background: none; border: none; color: #a1a1aa; cursor: pointer;">
+                <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+            </button>
+        </div>
+
+        <!-- Birthdays -->
+        <div style="padding: 20px; border-bottom: 1px solid #27272a;">
+            <div style="font-size: 14px; font-weight: 600; color: #a1a1aa; margin-bottom: 12px;">Birthdays</div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 24px;">🎁</div>
+                <div style="font-size: 14px; color: #e4e4e7;">
+                    <span style="font-weight: 600; color: white;">Deepak Kumar</span>'s birthday is today.
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact List -->
+        <div style="flex: 1; overflow-y: auto; padding: 10px;">
+            <!-- List items -->
+            <div class="contact-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease;">
+                <div style="position: relative;">
+                    <img src="https://ui-avatars.com/api/?name=Karm+Chavda&background=random"
+                        style="width: 40px; height: 40px; border-radius: 50%;">
+                    <div
+                        style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #10B981; border: 2px solid #18181b; border-radius: 50%;">
+                    </div>
+                </div>
+                <div style="font-weight: 500; font-size: 14px;">Karm Chavda</div>
+            </div>
+
+            <div class="contact-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease;">
+                <div style="position: relative;">
+                    <img src="https://ui-avatars.com/api/?name=Ashli+Weatherly&background=random"
+                        style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+                <div style="font-weight: 500; font-size: 14px;">Ashli Weatherly</div>
+            </div>
+
+            <div class="contact-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease;">
+                <div style="position: relative;">
+                    <img src="https://ui-avatars.com/api/?name=Saira+Fabian&background=random"
+                        style="width: 40px; height: 40px; border-radius: 50%;">
+                    <div
+                        style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #10B981; border: 2px solid #18181b; border-radius: 50%;">
+                    </div>
+                </div>
+                <div style="font-weight: 500; font-size: 14px;">Saira Fabian</div>
+            </div>
+
+            <div class="contact-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease;">
+                <div style="position: relative;">
+                    <img src="https://ui-avatars.com/api/?name=Bhagyashree+Kulste&background=random"
+                        style="width: 40px; height: 40px; border-radius: 50%;">
+                </div>
+                <div style="font-weight: 500; font-size: 14px;">Bhagyashree Kulste</div>
+            </div>
+
+            <div class="contact-item"
+                style="display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.2s ease;">
+                <div style="position: relative;">
+                    <img src="https://ui-avatars.com/api/?name=Shatabdi+Biswas&background=random"
+                        style="width: 40px; height: 40px; border-radius: 50%;">
+                    <div
+                        style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #3b82f6; border: 2px solid #18181b; border-radius: 50%;">
+                    </div>
+                </div>
+                <div style="font-weight: 500; font-size: 14px;">Shatabdi Biswas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Toggle Friends Sidebar
+        function toggleFriendsSidebar() {
+            const sidebar = document.getElementById('friendsSidebar');
+            if (sidebar) {
+                const isOpen = sidebar.style.right === '0px';
+                sidebar.style.right = isOpen ? '-320px' : '0px';
+            }
+        }
+
+        // Add hover effect to contact items via JS (inline simplified)
+        document.querySelectorAll('.contact-item').forEach(item => {
+            item.addEventListener('mouseenter', () => item.style.background = 'rgba(255,255,255,0.05)');
+            item.addEventListener('mouseleave', () => item.style.background = 'transparent');
+        });
+
+        // AI Chat functionality (ensure elements exist before adding listeners)
+        const aiSendBtn = document.getElementById('aiSendBtn');
+        const aiChatInput = document.getElementById('aiChatInput');
+
+        // ... (rest of the script is preserved if it follows)
+
+        if (aiSendBtn && aiChatInput) {
+            aiSendBtn.addEventListener('click', () => {
+                const question = aiChatInput.value.trim();
+                if (question) {
+                    alert(`AI Response to: "${question}"\n\nThis is a placeholder response. In production, this would connect to an AI service to provide personalized help with your programme questions.`);
+                    aiChatInput.value = '';
+                }
+            });
+
+            aiChatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    aiSendBtn.click();
+                }
+            });
+        }
+
+        // Floating Support Chat Logic (Merged with existing if logic below or handled in main block)
+        // (Removed duplicate selection to avoid redeclaration errors)
+
+        // Close drawer (moved function to top level scope if needed, or kept here)
+        function closeDrawer() {
+            const profileDrawer = document.getElementById('profileDrawer');
+            const profileDrawerOverlay = document.getElementById('profileDrawerOverlay');
+            if (profileDrawer) profileDrawer.classList.remove('active');
+            if (profileDrawerOverlay) profileDrawerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileDrawer = document.getElementById('profileDrawer');
+        const profileDrawerOverlay = document.getElementById('profileDrawerOverlay');
+        const drawerClose = document.getElementById('drawerClose');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const logoutModal = document.getElementById('logoutModal');
+        const cancelLogout = document.getElementById('cancelLogout');
+        const confirmLogout = document.getElementById('confirmLogout');
+
+        if (profileAvatar) {
+            profileAvatar.addEventListener('click', () => {
+                profileDrawer.classList.add('active');
+                profileDrawerOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                lucide.createIcons();
+            });
+        }
+
+        if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+        if (profileDrawerOverlay) profileDrawerOverlay.addEventListener('click', closeDrawer);
+
+        // Logout button click
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                closeDrawer();
+                setTimeout(() => {
+                    if (logoutModal) {
+                        logoutModal.classList.add('active');
+                        lucide.createIcons();
+                    }
+                }, 300);
+            });
+        }
+
+        // Cancel logout
+        if (cancelLogout) {
+            cancelLogout.addEventListener('click', () => {
+                if (logoutModal) logoutModal.classList.remove('active');
+            });
+        }
+
+        // Confirm logout
+        if (confirmLogout) {
+            confirmLogout.addEventListener('click', () => {
+                // Redirect to homepage
+                window.location.href = '../index.html';
+            });
+        }
+
+        // Close modal on overlay click
+        if (logoutModal) {
+            logoutModal.addEventListener('click', (e) => {
+                if (e.target === logoutModal) {
+                    logoutModal.classList.remove('active');
+                }
+            });
+        }
+
+        // Task List Logic
+        const taskItems = document.querySelectorAll('.task-item');
+
+        taskItems.forEach(item => {
+            const checkbox = item.querySelector('.task-checkbox');
+            const title = item.querySelector('.task-title');
+            const uploadBtn = item.querySelector('.btn-upload');
+            const metaContainer = item.querySelector('.task-meta');
+
+            if (checkbox) {
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        title.classList.add('completed');
+                        title.style.textDecoration = 'line-through';
+                        title.style.opacity = '0.6';
+
+                        // Add completed badge if it doesn't exist
+                        if (!item.querySelector('.completed-text')) {
+                            const completedText = document.createElement('span');
+                            completedText.className = 'completed-text';
+                            completedText.style.color = 'var(--color-success)';
+                            completedText.textContent = '✓ Completed';
+                            if (metaContainer) metaContainer.prepend(completedText);
+                        }
+
+                        // Enable upload button if exists
+                        if (uploadBtn) {
+                            uploadBtn.disabled = false;
+                            uploadBtn.classList.remove('btn-ghost');
+                            uploadBtn.classList.add('btn-primary');
+                        }
+                    } else {
+                        title.classList.remove('completed');
+                        title.style.textDecoration = 'none';
+                        title.style.opacity = '1';
+
+                        // Remove completed badge
+                        const completedText = item.querySelector('.completed-text');
+                        if (completedText) completedText.remove();
+
+                        // Disable upload button
+                        if (uploadBtn) {
+                            uploadBtn.disabled = true;
+                            uploadBtn.classList.add('btn-ghost');
+                            uploadBtn.classList.remove('btn-primary');
+                        }
+                    }
+                });
+            }
+
+            if (uploadBtn) {
+                uploadBtn.addEventListener('click', () => {
+                    // Reset to loading state
+                    uploadBtn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width: 14px; height: 14px; margin-right: 4px;"></i> Uploading...';
+                    uploadBtn.disabled = true; // Temporarily disable while "uploading"
+                    lucide.createIcons();
+
+                    setTimeout(() => {
+                        // Change to "Reupload" state
+                        uploadBtn.innerHTML = '<i data-lucide="refresh-cw" style="width: 14px; height: 14px; margin-right: 4px;"></i> Reupload';
+
+                        // Style as an active secondary/link button
+                        uploadBtn.classList.remove('btn-primary', 'btn-success');
+                        uploadBtn.style.background = 'transparent';
+                        uploadBtn.style.color = 'var(--color-primary)';
+                        uploadBtn.style.border = '1px solid var(--color-primary)';
+                        uploadBtn.style.padding = '4px 12px';
+                        uploadBtn.style.borderRadius = '6px';
+
+                        // Re-enable for subsequent clicks
+                        uploadBtn.disabled = false;
+
+                        lucide.createIcons();
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize Lucide icons
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+
+            // Check for Onboarding Success Flag
+            const onboardingComplete = localStorage.getItem('onboardingComplete');
+            if (onboardingComplete === 'true') {
+                const projectData = JSON.parse(localStorage.getItem('assignedProject') || '{}');
+                const assignmentModal = document.getElementById('assignmentModal');
+
+                if (assignmentModal && projectData.name) {
+                    // Populate Modal
+                    document.getElementById('assignProjectName').textContent = projectData.name;
+                    document.getElementById('assignMentorName').textContent = projectData.mentor;
+                    document.getElementById('assignDeptName').textContent = projectData.dept;
+                    document.getElementById('assignDeptReport').textContent = projectData.dept;
+
+                    // Show Modal
+                    assignmentModal.style.display = 'flex';
+
+                    // Trigger confetti
+                    if (window.confetti) {
+                        confetti({
+                            particleCount: 150,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                }
+
+                // Clear flags
+                localStorage.removeItem('onboardingComplete');
+                // We might want to keep 'assignedProject' if we want to display it persistently elsewhere, 
+                // but for this modal requirement, clearing the flag is sufficient.
+            }
+
+            // Drawer Elements
+            const profileAvatar = document.getElementById('profileAvatar');
+            const profileAvatarContainer = document.getElementById('profileAvatarContainer');
+            const profileDrawer = document.getElementById('profileDrawer');
+            const profileDrawerOverlay = document.getElementById('profileDrawerOverlay');
+            const drawerClose = document.getElementById('drawerClose');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const logoutModal = document.getElementById('logoutModal');
+            const cancelLogout = document.getElementById('cancelLogout');
+            const confirmLogout = document.getElementById('confirmLogout');
+
+            function openDrawer() {
+                if (profileDrawer) profileDrawer.classList.add('active');
+                if (profileDrawerOverlay) profileDrawerOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function closeDrawer() {
+                if (profileDrawer) profileDrawer.classList.remove('active');
+                if (profileDrawerOverlay) profileDrawerOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            // Bind Events
+            if (profileAvatar) profileAvatar.addEventListener('click', openDrawer);
+            if (profileAvatarContainer) profileAvatarContainer.addEventListener('click', openDrawer); // Helper container click
+
+            if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+            if (profileDrawerOverlay) profileDrawerOverlay.addEventListener('click', closeDrawer);
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    closeDrawer();
+                    setTimeout(() => {
+                        if (logoutModal) {
+                            logoutModal.classList.add('active');
+                            if (window.lucide) lucide.createIcons();
+                        }
+                    }, 300);
+                });
+            }
+
+            if (cancelLogout) {
+                cancelLogout.addEventListener('click', () => {
+                    if (logoutModal) logoutModal.classList.remove('active');
+                });
+            }
+
+            if (confirmLogout) {
+                confirmLogout.addEventListener('click', () => {
+                    window.location.href = '../index.html';
+                });
+            }
+
+            if (logoutModal) {
+                logoutModal.addEventListener('click', (e) => {
+                    if (e.target === logoutModal) logoutModal.classList.remove('active');
+                });
+            }
+
+            // AI Chat
+            const aiSendBtn = document.getElementById('aiSendBtn');
+            const aiChatInput = document.getElementById('aiChatInput');
+            if (aiSendBtn && aiChatInput) {
+                aiSendBtn.addEventListener('click', () => {
+                    const question = aiChatInput.value.trim();
+                    if (question) {
+                        alert('AI Response to: "' + question + '"\n\nThis is a placeholder response in the prototype.');
+                        aiChatInput.value = '';
+                    }
+                });
+                aiChatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') aiSendBtn.click();
+                });
+            }
+        });
+    </script>
+    <script>
+        lucide.createIcons();
+    </script>
+    <!-- Assignment Success Modal -->
+    <div id="assignmentModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px; border-radius: 16px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);">
+            <div
+                style="width: 64px; height: 64px; background: #dcfce7; color: #166534; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px;">
+                🎉</div>
+            <h2 style="margin: 0 0 8px; color: var(--slate-900); font-size: 24px; font-weight: 700;">Project Assigned!
+            </h2>
+            <p style="color: var(--slate-500); margin-bottom: 24px;">You have been successfully matched based on your
+                skills.</p>
+
+            <div id="assignmentDetails"
+                style="margin-bottom: 24px; text-align: left; background: var(--slate-50); padding: 20px; border-radius: 12px; border: 1px solid var(--slate-200);">
+                <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--slate-200);">
+                    <div
+                        style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); font-weight: 600; margin-bottom: 4px;">
+                        Project</div>
+                    <div id="assignProjectName" style="font-weight: 600; color: var(--color-primary); font-size: 16px;">
+                    </div>
+                </div>
+                <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--slate-200);">
+                    <div
+                        style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); font-weight: 600; margin-bottom: 4px;">
+                        Mentor</div>
+                    <div id="assignMentorName" style="font-weight: 600; color: var(--slate-900);"></div>
+                </div>
+                <div>
+                    <div
+                        style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-500); font-weight: 600; margin-bottom: 4px;">
+                        Department</div>
+                    <div id="assignDeptName" style="font-weight: 600; color: var(--slate-900);"></div>
+                </div>
+            </div>
+
+            <p style="color: var(--slate-600); margin-bottom: 24px; font-size: 14px;">Please report to the <strong
+                    id="assignDeptReport" style="color: var(--slate-900);"></strong> department for further
+                instructions.</p>
+
+            <button class="btn btn-primary" onclick="document.getElementById('assignmentModal').style.display='none'"
+                style="width: 100%; justify-content: center;">
+                Get Started
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>
