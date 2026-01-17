@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Setup - DESIS Onboarding</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: var(--slate-50);
+            padding: var(--space-8) 0;
+        }
+
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .onboarding-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .onboarding-card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-10);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .photo-upload-zone {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px dashed var(--slate-300);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--slate-50);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-upload-zone:hover {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .photo-upload-zone.has-image {
+            border-style: solid;
+            border-color: var(--color-accent);
+        }
+
+        .photo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            text-align: center;
+        }
+
+        .photo-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+            color: var(--slate-400);
+        }
+
+        .photo-text {
+            font-size: var(--text-xs);
+            color: var(--slate-500);
+        }
+
+        .upload-hint {
+            margin-top: var(--space-2);
+            font-size: var(--text-sm);
+            color: var(--slate-500);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: var(--text-xs);
+            color: var(--slate-400);
+            margin-top: var(--space-2);
+        }
+
+        .onboarding-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--slate-200);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .onboarding-card {
+                padding: var(--space-6);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient-mesh"></div>
+
+    <div class="onboarding-container">
+        <div class="container">
+            <!-- Progress Steps -->
+            <div class="onboarding-content">
+                <div class="progress-steps">
+                    <div class="progress-step active">
+                        <div class="progress-step-circle">1</div>
+                        <div class="progress-step-label">Profile</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-circle">2</div>
+                        <div class="progress-step-label">Skills</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-circle">3</div>
+                        <div class="progress-step-label">Preferences</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-circle">4</div>
+                        <div class="progress-step-label">Schedule</div>
+                    </div>
+                </div>
+
+                <!-- Onboarding Card -->
+                <div class="onboarding-card fade-in">
+                    <div class="onboarding-header">
+                        <h2 style="margin-bottom: var(--space-2);">Welcome to DESIS! 👋</h2>
+                        <p style="color: var(--slate-600);">Let's set up your profile to get started</p>
+                    </div>
+
+                    <form id="profileForm">
+                        <!-- Photo Upload -->
+                        <div class="photo-upload">
+                            <div class="photo-upload-zone" id="photoZone">
+                                <div class="photo-placeholder" id="photoPlaceholder">
+                                    <div class="photo-icon">📷</div>
+                                    <div class="photo-text">Upload Photo</div>
+                                </div>
+                                <img id="photoPreview" class="photo-preview" style="display: none;" />
+                            </div>
+                            <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                            <p class="upload-hint">Click to upload or drag and drop</p>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label class="form-label" for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" class="form-input" placeholder="John Doe"
+                                value="Rohan Kumar" required>
+                        </div>
+
+                        <!-- College and Degree -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="college">College/University *</label>
+                                <input type="text" id="college" class="form-input" placeholder="IIT Delhi" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="degree">Degree *</label>
+                                <select id="degree" class="form-select" required>
+                                    <option value="">Select degree</option>
+                                    <option value="btech">B.Tech</option>
+                                    <option value="mtech">M.Tech</option>
+                                    <option value="bsc">B.Sc</option>
+                                    <option value="msc">M.Sc</option>
+                                    <option value="bca">BCA</option>
+                                    <option value="mca">MCA</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Major and Graduation -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="major">Major *</label>
+                                <input type="text" id="major" class="form-input" placeholder="Computer Science"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="graduation">Expected Graduation *</label>
+                                <input type="month" id="graduation" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <!-- Contact and LinkedIn -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Contact Number *</label>
+                                <input type="tel" id="phone" class="form-input" placeholder="+91 98765 43210" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="linkedin">LinkedIn Profile</label>
+                                <input type="url" id="linkedin" class="form-input"
+                                    placeholder="linkedin.com/in/yourprofile">
+                            </div>
+                        </div>
+
+                        <!-- About -->
+                        <div class="form-group">
+                            <label class="form-label" for="about">Tell us about yourself</label>
+                            <textarea id="about" class="form-textarea"
+                                placeholder="Share your interests, goals, and what excites you about this internship..."
+                                maxlength="500"></textarea>
+                            <div class="char-count">
+                                <span id="charCount">0</span>/500 characters
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="onboarding-actions">
+                            <button type="button" class="btn btn-ghost">
+                                Skip for now
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Continue →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Photo upload functionality
+        const photoZone = document.getElementById('photoZone');
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        const photoPlaceholder = document.getElementById('photoPlaceholder');
+
+        photoZone.addEventListener('click', () => {
+            photoInput.click();
+        });
+
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                    photoPlaceholder.style.display = 'none';
+                    photoZone.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and drop
+        photoZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            photoZone.style.borderColor = 'var(--color-accent)';
+        });
+
+        photoZone.addEventListener('dragleave', () => {
+            photoZone.style.borderColor = 'var(--slate-300)';
+        });
+
+        photoZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            photoZone.style.borderColor = 'var(--slate-300)';
+
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    photoPreview.src = e.target.result;
+                    photoPreview.style.display = 'block';
+                    photoPlaceholder.style.display = 'none';
+                    photoZone.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Character count
+        const aboutTextarea = document.getElementById('about');
+        const charCount = document.getElementById('charCount');
+
+        aboutTextarea.addEventListener('input', () => {
+            charCount.textContent = aboutTextarea.value.length;
+        });
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Save form data (in real app, would send to backend)
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                college: document.getElementById('college').value,
+                degree: document.getElementById('degree').value,
+                major: document.getElementById('major').value,
+                graduation: document.getElementById('graduation').value,
+                phone: document.getElementById('phone').value,
+                linkedin: document.getElementById('linkedin').value,
+                about: document.getElementById('about').value
+            };
+
+            console.log('Profile data:', formData);
+
+            // Navigate to next step
+            window.location.href = 'onboarding-skills.html';
+        });
+
+        // Skip button
+        document.querySelector('.btn-ghost').addEventListener('click', () => {
+            if (confirm('Are you sure you want to skip profile setup? You can complete it later.')) {
+                window.location.href = 'onboarding-skills.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

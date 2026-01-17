@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule & Availability - DESIS Onboarding</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: var(--slate-50);
+            padding: var(--space-8) 0;
+        }
+
+        .onboarding-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .onboarding-card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-10);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .timeline-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        .timeline-title {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .timeline-weeks {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+        }
+
+        .week-block {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            text-align: center;
+        }
+
+        .week-number {
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+        }
+
+        .week-label {
+            font-size: var(--text-xs);
+            opacity: 0.9;
+        }
+
+        .location-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .location-option {
+            padding: var(--space-5);
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .location-option:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .location-option.selected {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .location-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+
+        .location-label {
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+        }
+
+        .availability-grid {
+            display: grid;
+            grid-template-columns: auto repeat(2, 1fr);
+            gap: var(--space-3);
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .day-label {
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+        }
+
+        .day-checkbox {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .day-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .hours-input {
+            width: 100%;
+        }
+
+        .terms-section {
+            background: var(--slate-50);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .checkbox-large {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+        }
+
+        .checkbox-large input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .checkbox-large label {
+            cursor: pointer;
+            color: var(--slate-700);
+            line-height: var(--leading-relaxed);
+        }
+
+        .onboarding-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--slate-200);
+        }
+
+        .complete-message {
+            text-align: center;
+            padding: var(--space-4);
+            background: var(--color-success-light);
+            color: var(--color-success);
+            border-radius: var(--radius-lg);
+            font-weight: var(--font-medium);
+            margin-bottom: var(--space-6);
+            display: none;
+        }
+
+        .complete-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-weeks {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .location-options {
+                grid-template-columns: 1fr;
+            }
+
+            .availability-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .onboarding-card {
+                padding: var(--space-6);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient-mesh"></div>
+
+    <div class="onboarding-container">
+        <div class="container">
+            <div class="onboarding-content">
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="progress-step completed">
+                        <div class="progress-step-circle">✓</div>
+                        <div class="progress-step-label">Profile</div>
+                    </div>
+                    <div class="progress-step completed">
+                        <div class="progress-step-circle">✓</div>
+                        <div class="progress-step-label">Skills</div>
+                    </div>
+                    <div class="progress-step completed">
+                        <div class="progress-step-circle">✓</div>
+                        <div class="progress-step-label">Preferences</div>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="progress-step-circle">4</div>
+                        <div class="progress-step-label">Schedule</div>
+                    </div>
+                </div>
+
+                <!-- Onboarding Card -->
+                <div class="onboarding-card fade-in">
+                    <div class="onboarding-header">
+                        <h2 style="margin-bottom: var(--space-2);">Let's Plan Your Journey 📅</h2>
+                        <p style="color: var(--slate-600);">Set your availability and program preferences</p>
+                    </div>
+
+                    <!-- Timeline Overview -->
+                    <div class="timeline-overview">
+                        <div class="timeline-title">8-Week Program Timeline</div>
+                        <div class="timeline-weeks">
+                            <div class="week-block">
+                                <div class="week-number">Week 1-2</div>
+                                <div class="week-label">Onboarding & Training</div>
+                            </div>
+                            <div class="week-block">
+                                <div class="week-number">Week 3-6</div>
+                                <div class="week-label">Project Execution</div>
+                            </div>
+                            <div class="week-block">
+                                <div class="week-number">Week 7</div>
+                                <div class="week-label">Final Preparation</div>
+                            </div>
+                            <div class="week-block">
+                                <div class="week-number">Week 8</div>
+                                <div class="week-label">Presentations</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="scheduleForm">
+                        <!-- Start Date -->
+                        <div class="form-group">
+                            <label class="form-label" for="startDate">Program Start Date *</label>
+                            <input type="date" id="startDate" class="form-input" required>
+                            <p class="form-help">Your internship will begin on this date</p>
+                        </div>
+
+                        <!-- Working Hours -->
+                        <div class="form-group">
+                            <label class="form-label" for="workingHours">Preferred Working Hours *</label>
+                            <select id="workingHours" class="form-select" required>
+                                <option value="">Select preferred hours</option>
+                                <option value="morning">Morning (9 AM - 1 PM)</option>
+                                <option value="afternoon">Afternoon (1 PM - 5 PM)</option>
+                                <option value="full-day">Full Day (9 AM - 5 PM)</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+
+                        <!-- Location Preference -->
+                        <div class="form-group">
+                            <label class="form-label">Work Location Preference *</label>
+                            <div class="location-options">
+                                <div class="location-option" data-location="remote">
+                                    <div class="location-icon">🏠</div>
+                                    <div class="location-label">Remote</div>
+                                </div>
+                                <div class="location-option" data-location="hybrid">
+                                    <div class="location-icon">🔄</div>
+                                    <div class="location-label">Hybrid</div>
+                                </div>
+                                <div class="location-option" data-location="office">
+                                    <div class="location-icon">🏢</div>
+                                    <div class="location-label">Office</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Weekly Availability -->
+                        <div class="form-group">
+                            <label class="form-label">Weekly Availability</label>
+                            <p class="form-help" style="margin-bottom: var(--space-4);">Check the days you'll be
+                                available and indicate hours per day</p>
+                            <div class="availability-grid">
+                                <!-- Header -->
+                                <div></div>
+                                <div
+                                    style="font-weight: var(--font-semibold); font-size: var(--text-sm); color: var(--slate-600);">
+                                    Available</div>
+                                <div
+                                    style="font-weight: var(--font-semibold); font-size: var(--text-sm); color: var(--slate-600);">
+                                    Hours/Day</div>
+
+                                <!-- Monday -->
+                                <div class="day-label">Monday</div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="mon" checked>
+                                </div>
+                                <div>
+                                    <input type="number" class="form-input hours-input" min="1" max="12" value="8"
+                                        disabled>
+                                </div>
+
+                                <!-- Tuesday -->
+                                <div class="day-label">Tuesday</div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="tue" checked>
+                                </div>
+                                <div>
+                                    <input type="number" class="form-input hours-input" min="1" max="12" value="8"
+                                        disabled>
+                                </div>
+
+                                <!-- Wednesday -->
+                                <div class="day-label">Wednesday</div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="wed" checked>
+                                </div>
+                                <div>
+                                    <input type="number" class="form-input hours-input" min="1" max="12" value="8"
+                                        disabled>
+                                </div>
+
+                                <!-- Thursday -->
+                                <div class="day-label">Thursday</div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="thu" checked>
+                                </div>
+                                <div>
+                                    <input type="number" class="form-input hours-input" min="1" max="12" value="8"
+                                        disabled>
+                                </div>
+
+                                <!-- Friday -->
+                                <div class="day-label">Friday</div>
+                                <div class="day-checkbox">
+                                    <input type="checkbox" id="fri" checked>
+                                </div>
+                                <div>
+                                    <input type="number" class="form-input hours-input" min="1" max="12" value="8"
+                                        disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Special Requests -->
+                        <div class="form-group">
+                            <label class="form-label" for="specialRequests">Special Requests or Accommodations
+                                (Optional)</label>
+                            <textarea id="specialRequests" class="form-textarea"
+                                placeholder="Any specific requirements, time zone considerations, or accessibility needs..."
+                                rows="3"></textarea>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="terms-section">
+                            <div class="checkbox-large">
+                                <input type="checkbox" id="terms" required>
+                                <label for="terms">
+                                    I agree to the <a href="#" style="color: var(--color-accent);">program terms and
+                                        conditions</a>,
+                                    including commitment to the 8-week duration, weekly feedback sessions, and final
+                                    presentation requirements.
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Complete Message -->
+                        <div class="complete-message" id="completeMessage">
+                            🎉 Congratulations! Your onboarding is complete. Redirecting to dashboard...
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="onboarding-actions">
+                            <button type="button" class="btn btn-ghost" onclick="history.back()">
+                                ← Back
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Complete Onboarding 🚀
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Location selection
+        const locationOptions = document.querySelectorAll('.location-option');
+        let selectedLocation = null;
+
+        locationOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                locationOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                selectedLocation = option.dataset.location;
+            });
+        });
+
+        // Weekly availability
+        const dayCheckboxes = document.querySelectorAll('.day-checkbox input[type="checkbox"]');
+        const hoursInputs = document.querySelectorAll('.hours-input');
+
+        dayCheckboxes.forEach((checkbox, index) => {
+            checkbox.addEventListener('change', () => {
+                hoursInputs[index].disabled = !checkbox.checked;
+                if (!checkbox.checked) {
+                    hoursInputs[index].value = '';
+                } else {
+                    hoursInputs[index].value = 8;
+                }
+            });
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').setAttribute('min', today);
+
+        // Form submission
+        document.getElementById('scheduleForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Validate location selection
+            if (!selectedLocation) {
+                alert('Please select a work location preference.');
+                return;
+            }
+
+            // Validate terms
+            if (!document.getElementById('terms').checked) {
+                alert('Please agree to the program terms and conditions.');
+                return;
+            }
+
+            // Collect form data
+            const scheduleData = {
+                startDate: document.getElementById('startDate').value,
+                workingHours: document.getElementById('workingHours').value,
+                location: selectedLocation,
+                availability: Array.from(dayCheckboxes).map((cb, i) => ({
+                    day: cb.id,
+                    available: cb.checked,
+                    hours: cb.checked ? hoursInputs[i].value : 0
+                })),
+                specialRequests: document.getElementById('specialRequests').value
+            };
+
+            console.log('Onboarding complete! Schedule data:', scheduleData);
+
+            // Show completion message
+            document.getElementById('completeMessage').classList.add('show');
+
+            // Simulate redirect after 2 seconds
+            setTimeout(() => {
+                alert('Onboarding complete! Redirecting to your dashboard...');
+                window.location.href = 'intern-dashboard.html';
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>

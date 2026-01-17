@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Evaluation - DESIS Platform</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <style>
+        body {
+            background: var(--slate-50);
+            padding-top: 80px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            padding: var(--space-4) 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+        }
+
+        .evaluation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .evaluation-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: var(--space-6);
+        }
+
+        .presentation-header {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-6);
+        }
+
+        .intern-info {
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+        }
+
+        .project-title {
+            font-size: var(--text-2xl);
+            font-weight: var(--font-semibold);
+            margin-top: var(--space-4);
+            margin-bottom: var(--space-2);
+        }
+
+        .timer-display {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-4);
+            background: var(--slate-100);
+            border-radius: var(--radius-full);
+            font-weight: var(--font-semibold);
+        }
+
+        .evaluation-form {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4);
+            background: var(--slate-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+        }
+
+        .section-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--slate-900);
+        }
+
+        .section-points {
+            font-size: var(--text-lg);
+            font-weight: var(--font-bold);
+            color: var(--color-accent);
+        }
+
+        .criterion-item {
+            margin-bottom: var(--space-8);
+        }
+
+        .criterion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-3);
+        }
+
+        .criterion-label {
+            font-weight: var(--font-semibold);
+            color: var(--slate-700);
+        }
+
+        .criterion-score {
+            font-size: var(--text-lg);
+            font-weight: var(--font-bold);
+            color: var(--color-accent);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .score-slider {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--slate-200);
+            border-radius: var(--radius-full);
+            outline: none;
+            margin-bottom: var(--space-3);
+        }
+
+        .score-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .score-guide {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--text-xs);
+            color: var(--slate-500);
+            margin-bottom: var(--space-4);
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: var(--space-3);
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            resize: vertical;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+        }
+
+        .scoring-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .score-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-6);
+        }
+
+        .total-score {
+            text-align: center;
+            padding: var(--space-6);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+        }
+
+        .total-score-value {
+            font-size: 4rem;
+            font-weight: var(--font-bold);
+            line-height: 1;
+        }
+
+        .total-score-label {
+            font-size: var(--text-sm);
+            opacity: 0.9;
+            margin-top: var(--space-2);
+        }
+
+        .score-breakdown {
+            margin-top: var(--space-4);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--slate-100);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .consistency-check {
+            background: var(--slate-50);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            font-size: var(--text-sm);
+        }
+
+        .peer-comparison {
+            margin-top: var(--space-4);
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) 0;
+            font-size: var(--text-sm);
+        }
+
+        .recommendation-section {
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 2px solid var(--slate-200);
+        }
+
+        .recommendation-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .recommendation-option {
+            padding: var(--space-4);
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .recommendation-option:hover {
+            border-color: var(--color-accent);
+        }
+
+        .recommendation-option.selected {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .recommendation-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-2);
+        }
+
+        @media (max-width: 1024px) {
+            .evaluation-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .scoring-sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo">DESIS</div>
+            <div style="display: flex; align-items: center; gap: var(--space-6);">
+                <div class="timer-display">
+                    ⏱️ <span id="timer">15:32</span> elapsed
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Dr+Sharma&background=667eea&color=fff" alt="Profile"
+                    class="avatar">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Evaluation Container -->
+    <div class="evaluation-container">
+        <!-- Presentation Header -->
+        <div class="presentation-header">
+            <div class="intern-info">
+                <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff" alt="Rohan"
+                    class="avatar-xl">
+                <div>
+                    <h2 style="margin-bottom: var(--space-2);">Rohan Kumar</h2>
+                    <div style="color: var(--slate-600); margin-bottom: var(--space-1);">
+                        IIT Delhi • B.Tech Computer Science • Mentor: Priya Sharma
+                    </div>
+                    <div style="display: flex; gap: var(--space-2);">
+                        <span class="badge badge-info">Week 8</span>
+                        <span class="badge badge-success">Final Presentation</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-title">Real-Time Trading Analytics Dashboard</div>
+            <p style="color: var(--slate-600);">
+                A comprehensive analytics platform for real-time market data visualization and algorithmic trading
+                insights
+            </p>
+        </div>
+
+        <!-- Evaluation Layout -->
+        <div class="evaluation-layout">
+            <!-- Main Form -->
+            <div class="evaluation-form">
+                <form id="evaluationForm">
+                    <!-- Technical Excellence Section -->
+                    <div class="section-header">
+                        <div class="section-title">Technical Excellence</div>
+                        <div class="section-points"><span id="technicalTotal">0</span>/40 pts</div>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Problem Understanding (10 pts)</div>
+                            <div class="criterion-score"><span id="problem-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="problem" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea"
+                            placeholder="Quick notes on problem understanding..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Solution Design (10 pts)</div>
+                            <div class="criterion-score"><span id="design-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="design" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on solution design..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Implementation Quality (10 pts)</div>
+                            <div class="criterion-score"><span id="implementation-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="implementation" min="0" max="10" value="0"
+                            step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on implementation..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Innovation & Impact (10 pts)</div>
+                            <div class="criterion-score"><span id="innovation-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="innovation" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on innovation..."></textarea>
+                    </div>
+
+                    <!-- Presentation Skills Section -->
+                    <div class="section-header" style="margin-top: var(--space-8);">
+                        <div class="section-title">Presentation Skills</div>
+                        <div class="section-points"><span id="presentationTotal">0</span>/30 pts</div>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Clarity & Structure (10 pts)</div>
+                            <div class="criterion-score"><span id="clarity-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="clarity" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on clarity..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Demo & Visuals (10 pts)</div>
+                            <div class="criterion-score"><span id="demo-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="demo" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on demo quality..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Q&A Performance (10 pts)</div>
+                            <div class="criterion-score"><span id="qa-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="qa" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on Q&A handling..."></textarea>
+                    </div>
+
+                    <!-- Professional Skills Section -->
+                    <div class="section-header" style="margin-top: var(--space-8);">
+                        <div class="section-title">Professional Skills</div>
+                        <div class="section-points"><span id="professionalTotal">0</span>/30 pts</div>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Learning & Growth (10 pts)</div>
+                            <div class="criterion-score"><span id="learning-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="learning" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on learning trajectory..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Collaboration & Communication (10 pts)</div>
+                            <div class="criterion-score"><span id="collaboration-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="collaboration" min="0" max="10" value="0" step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on collaboration..."></textarea>
+                    </div>
+
+                    <div class="criterion-item">
+                        <div class="criterion-header">
+                            <div class="criterion-label">Professionalism & Ethics (10 pts)</div>
+                            <div class="criterion-score"><span id="professionalism-score">0</span> pts</div>
+                        </div>
+                        <input type="range" class="score-slider" id="professionalism" min="0" max="10" value="0"
+                            step="1">
+                        <div class="score-guide">
+                            <span>0 - Poor</span>
+                            <span>5 - Good</span>
+                            <span>10 - Exceptional</span>
+                        </div>
+                        <textarea class="notes-textarea" placeholder="Quick notes on professionalism..."></textarea>
+                    </div>
+
+                    <!-- Recommendation Section -->
+                    <div class="recommendation-section">
+                        <h3 style="margin-bottom: var(--space-2);">Placement Recommendation</h3>
+                        <p style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-4);">
+                            Based on overall performance, what is your recommendation?
+                        </p>
+                        <div class="recommendation-options">
+                            <div class="recommendation-option" data-rec="offer">
+                                <div class="recommendation-icon">✅</div>
+                                <div style="font-weight: var(--font-semibold);">Full-Time Offer</div>
+                            </div>
+                            <div class="recommendation-option" data-rec="maybe">
+                                <div class="recommendation-icon">🤔</div>
+                                <div style="font-weight: var(--font-semibold);">Maybe</div>
+                            </div>
+                            <div class="recommendation-option" data-rec="no-offer">
+                                <div class="recommendation-icon">❌</div>
+                                <div style="font-weight: var(--font-semibold);">No Offer</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Final Comments</label>
+                            <textarea class="form-textarea"
+                                placeholder="Overall assessment, strengths, areas for improvement, and reasoning for recommendation..."
+                                rows="5"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Submit Actions -->
+                    <div style="display: flex; gap: var(--space-4); margin-top: var(--space-8);">
+                        <button type="button" class="btn btn-ghost">Save Draft</button>
+                        <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">Submit Evaluation</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Scoring Sidebar -->
+            <div class="scoring-sidebar">
+                <div class="score-card">
+                    <div class="total-score">
+                        <div class="total-score-value" id="totalScore">0</div>
+                        <div class="total-score-label">Total Score / 100</div>
+                    </div>
+
+                    <div class="score-breakdown">
+                        <div class="breakdown-item">
+                            <span style="color: var(--slate-600);">Technical Excellence</span>
+                            <strong id="techBreakdown">0/40</strong>
+                        </div>
+                        <div class="breakdown-item">
+                            <span style="color: var(--slate-600);">Presentation Skills</span>
+                            <strong id="presBreakdown">0/30</strong>
+                        </div>
+                        <div class="breakdown-item">
+                            <span style="color: var(--slate-600);">Professional Skills</span>
+                            <strong id="profBreakdown">0/30</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-card">
+                    <h4 style="margin-bottom: var(--space-4);">Consistency Check</h4>
+                    <div class="consistency-check">
+                        <div style="font-weight: var(--font-semibold); margin-bottom: var(--space-2);">
+                            Your Scores vs Other Jury
+                        </div>
+                        <div class="peer-comparison">
+                            <div class="comparison-item">
+                                <span>Technical</span>
+                                <span id="techComparison">-</span>
+                            </div>
+                            <div class="comparison-item">
+                                <span>Presentation</span>
+                                <span id="presComparison">-</span>
+                            </div>
+                            <div class="comparison-item">
+                                <span>Professional</span>
+                                <span id="profComparison">-</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: var(--space-3); font-size: var(--text-xs); color: var(--slate-500);">
+                            Updates in real-time as other jury members score
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-card" style="background: var(--slate-50);">
+                    <h4 style="margin-bottom: var(--space-3); font-size: var(--text-base);">💡 Scoring Guide</h4>
+                    <div
+                        style="font-size: var(--text-sm); color: var(--slate-600); line-height: var(--leading-relaxed);">
+                        <p style="margin-bottom: var(--space-2);"><strong>9-10:</strong> Exceptional, exceeds
+                            expectations</p>
+                        <p style="margin-bottom: var(--space-2);"><strong>7-8:</strong> Strong performance, meets high
+                            standards</p>
+                        <p style="margin-bottom: var(--space-2);"><strong>5-6:</strong> Good, meets expectations</p>
+                        <p><strong>&lt;5:</strong> Below expectations, needs improvement</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Score tracking
+        const sliders = document.querySelectorAll('.score-slider');
+        let recommendation = null;
+
+        // Update individual scores
+        sliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const id = e.target.id;
+                const value = e.target.value;
+                document.getElementById(`${id}-score`).textContent = value;
+                calculateTotals();
+            });
+        });
+
+        // Calculate totals
+        function calculateTotals() {
+            // Technical Excellence
+            const technical = ['problem', 'design', 'implementation', 'innovation']
+                .reduce((sum, id) => sum + parseInt(document.getElementById(id).value || 0), 0);
+            document.getElementById('technicalTotal').textContent = technical;
+            document.getElementById('techBreakdown').textContent = `${technical}/40`;
+
+            // Presentation Skills
+            const presentation = ['clarity', 'demo', 'qa']
+                .reduce((sum, id) => sum + parseInt(document.getElementById(id).value || 0), 0);
+            document.getElementById('presentationTotal').textContent = presentation;
+            document.getElementById('presBreakdown').textContent = `${presentation}/30`;
+
+            // Professional Skills
+            const professional = ['learning', 'collaboration', 'professionalism']
+                .reduce((sum, id) => sum + parseInt(document.getElementById(id).value || 0), 0);
+            document.getElementById('professionalTotal').textContent = professional;
+            document.getElementById('profBreakdown').textContent = `${professional}/30`;
+
+            // Total
+            const total = technical + presentation + professional;
+            document.getElementById('totalScore').textContent = total;
+
+            // Simulated peer comparison
+            updatePeerComparison(technical, presentation, professional);
+        }
+
+        // Simulated peer comparison
+        function updatePeerComparison(tech, pres, prof) {
+            const peerTech = 35; // Simulated average
+            const peerPres = 24;
+            const peerProf = 26;
+
+            document.getElementById('techComparison').textContent =
+                `You: ${tech}, Others: ${peerTech} avg`;
+            document.getElementById('presComparison').textContent =
+                `You: ${pres}, Others: ${peerPres} avg`;
+            document.getElementById('profComparison').textContent =
+                `You: ${prof}, Others: ${peerProf} avg`;
+        }
+
+        // Recommendation selection
+        const recOptions = document.querySelectorAll('.recommendation-option');
+        recOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                recOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                recommendation = option.dataset.rec;
+            });
+        });
+
+        // Timer simulation
+        let seconds = 932; // 15:32
+        setInterval(() => {
+            seconds++;
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('timer').textContent =
+                `${mins}:${secs.toString().padStart(2, '0')}`;
+        }, 1000);
+
+        // Form submission
+        document.getElementById('evaluationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const total = parseInt(document.getElementById('totalScore').textContent);
+
+            if (total === 0) {
+                alert('Please score at least one criterion before submitting.');
+                return;
+            }
+
+            if (!recommendation) {
+                alert('Please select a placement recommendation.');
+                return;
+            }
+
+            alert(`Evaluation submitted!\n\nTotal Score: ${total}/100\nRecommendation: ${recommendation}\n\nThank you for your evaluation.`);
+
+            // In production, would submit to backend
+            console.log('Evaluation data:', {
+                intern: 'Rohan Kumar',
+                totalScore: total,
+                recommendation: recommendation
+            });
+        });
+    </script>
+</body>
+
+</html>

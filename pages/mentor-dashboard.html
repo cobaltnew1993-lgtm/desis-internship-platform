@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Dashboard - DESIS Platform</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <style>
+        body {
+            background: var(--slate-50);
+            padding-top: 80px;
+        }
+
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--slate-200);
+            padding: var(--space-4) 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: var(--space-6);
+            align-items: center;
+        }
+
+        .nav-menu a {
+            font-weight: var(--font-medium);
+            color: var(--slate-600);
+            transition: color 0.2s ease;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--color-accent);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--slate-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-label {
+            color: var(--slate-600);
+            font-size: var(--text-sm);
+        }
+
+        .stat-change {
+            font-size: var(--text-xs);
+            margin-top: var(--space-2);
+        }
+
+        .stat-change.positive {
+            color: var(--color-success);
+        }
+
+        .mentee-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .mentee-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .mentee-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .mentee-header {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .mentee-info h3 {
+            margin-bottom: var(--space-1);
+        }
+
+        .mentee-meta {
+            color: var(--slate-600);
+            font-size: var(--text-sm);
+        }
+
+        .performance-bars {
+            margin-bottom: var(--space-6);
+        }
+
+        .performance-item {
+            margin-bottom: var(--space-4);
+        }
+
+        .performance-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--space-2);
+            font-size: var(--text-sm);
+        }
+
+        .mentee-actions {
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--space-8);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-top: var(--space-4);
+        }
+
+        .action-button {
+            padding: var(--space-6);
+            border: 2px solid var(--slate-200);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .action-button:hover {
+            border-color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-3);
+        }
+
+        .action-title {
+            font-weight: var(--font-semibold);
+            color: var(--slate-700);
+            margin-bottom: var(--space-1);
+        }
+
+        .action-description {
+            font-size: var(--text-sm);
+            color: var(--slate-500);
+        }
+
+        .feedback-pending {
+            background: var(--color-warning-light);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .pending-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+
+        .pending-item {
+            background: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .schedule-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .meeting-list {
+            margin-top: var(--space-4);
+        }
+
+        .meeting-item {
+            display: flex;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-left: 3px solid var(--color-accent);
+            margin-bottom: var(--space-3);
+            background: var(--slate-50);
+            border-radius: var(--radius-md);
+        }
+
+        .meeting-time {
+            font-weight: var(--font-bold);
+            color: var(--color-accent);
+            min-width: 80px;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .mentee-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="logo">DESIS</div>
+            <div class="nav-menu">
+                <a href="#" class="active">Dashboard</a>
+                <a href="#">My Mentees</a>
+                <a href="#">Feedback</a>
+                <a href="#">Resources</a>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-4);">
+                <div style="position: relative; cursor: pointer; font-size: 1.25rem; color: var(--slate-600);">
+                    🔔
+                    <span
+                        style="position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; background: var(--color-error); border-radius: 50%; font-size: 10px; color: white; display: flex; align-items: center; justify-content: center;">2</span>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Priya+Sharma&background=10B981&color=fff" alt="Profile"
+                    class="avatar">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Page Header -->
+        <div style="margin-bottom: var(--space-8);">
+            <h1 style="margin-bottom: var(--space-2);">Welcome back, Priya! 👋</h1>
+            <p style="color: var(--slate-600);">Here's an overview of your mentees' progress</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Active Mentees</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">4.3</div>
+                <div class="stat-label">Avg Performance</div>
+                <div class="stat-change positive">↑ 0.3 from last week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2</div>
+                <div class="stat-label">Pending Feedback</div>
+                <div class="stat-change" style="color: var(--color-warning);">Due this week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">92%</div>
+                <div class="stat-label">Completion Rate</div>
+                <div class="stat-change positive">↑ 5% this month</div>
+            </div>
+        </div>
+
+        <!-- Feedback Pending -->
+        <div class="feedback-pending">
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+                <span style="font-size: 1.5rem;">⚠️</span>
+                <div>
+                    <strong style="color: var(--color-warning);">2 Feedback Submissions Pending</strong>
+                    <div style="font-size: var(--text-sm); color: var(--slate-600); margin-top: var(--space-1);">
+                        Please submit feedback by Friday to keep your mentees on track
+                    </div>
+                </div>
+            </div>
+            <div class="pending-list">
+                <div class="pending-item">
+                    <div>
+                        <strong>Rohan Kumar</strong> - Week 3 Feedback
+                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Due in 2 days</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm">Submit Now</button>
+                </div>
+                <div class="pending-item">
+                    <div>
+                        <strong>Anjali Patel</strong> - Week 3 Feedback
+                        <div style="font-size: var(--text-sm); color: var(--slate-600);">Due in 2 days</div>
+                    </div>
+                    <button class="btn btn-primary btn-sm">Submit Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3 style="margin-bottom: var(--space-2);">Quick Actions</h3>
+            <div class="action-grid">
+                <div class="action-button">
+                    <div class="action-icon">✍️</div>
+                    <div class="action-title">Submit Feedback</div>
+                    <div class="action-description">Weekly performance review</div>
+                </div>
+                <div class="action-button">
+                    <div class="action-icon">📅</div>
+                    <div class="action-title">Schedule 1:1</div>
+                    <div class="action-description">Book a meeting slot</div>
+                </div>
+                <div class="action-button">
+                    <div class="action-icon">📊</div>
+                    <div class="action-title">View Analytics</div>
+                    <div class="action-description">Track progress trends</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Mentees -->
+        <div>
+            <h2 style="margin-bottom: var(--space-6);">My Mentees</h2>
+            <div class="mentee-grid">
+                <!-- Mentee 1 -->
+                <div class="mentee-card">
+                    <div class="mentee-header">
+                        <img src="https://ui-avatars.com/api/?name=Rohan+Kumar&background=4F46E5&color=fff" alt="Rohan"
+                            class="avatar-lg">
+                        <div class="mentee-info">
+                            <h3>Rohan Kumar</h3>
+                            <div class="mentee-meta">Trading Analytics Dashboard</div>
+                            <div class="mentee-meta">Week 3 of 8 • 37.5% Complete</div>
+                        </div>
+                    </div>
+
+                    <div class="performance-bars">
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Technical Skills</span>
+                                <span style="font-weight: var(--font-semibold);">4.5/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%; background: var(--color-success);"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Time Management</span>
+                                <span style="font-weight: var(--font-semibold);">3.8/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 76%; background: var(--color-warning);"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Communication</span>
+                                <span style="font-weight: var(--font-semibold);">4.2/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 84%; background: var(--color-success);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: var(--space-4);">
+                        <div style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
+                            <strong>Latest Update:</strong> Completed API integration. Working on dashboard UI.
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <span class="badge badge-success">On Track</span>
+                            <span class="badge badge-info">High Potential</span>
+                        </div>
+                    </div>
+
+                    <div class="mentee-actions">
+                        <button class="btn btn-primary" style="flex: 1;">Give Feedback</button>
+                        <button class="btn btn-secondary">Message</button>
+                    </div>
+                </div>
+
+                <!-- Mentee 2 -->
+                <div class="mentee-card">
+                    <div class="mentee-header">
+                        <img src="https://ui-avatars.com/api/?name=Anjali+Patel&background=F59E0B&color=fff"
+                            alt="Anjali" class="avatar-lg">
+                        <div class="mentee-info">
+                            <h3>Anjali Patel</h3>
+                            <div class="mentee-meta">Data Pipeline Optimization</div>
+                            <div class="mentee-meta">Week 3 of 8 • 42% Complete</div>
+                        </div>
+                    </div>
+
+                    <div class="performance-bars">
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Technical Skills</span>
+                                <span style="font-weight: var(--font-semibold);">4.8/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 96%; background: var(--color-success);"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Time Management</span>
+                                <span style="font-weight: var(--font-semibold);">4.5/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 90%; background: var(--color-success);"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Communication</span>
+                                <span style="font-weight: var(--font-semibold);">4.0/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%; background: var(--color-success);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: var(--space-4);">
+                        <div style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
+                            <strong>Latest Update:</strong> Excellent progress on data optimization. Ahead of schedule.
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <span class="badge badge-success">Ahead of Schedule</span>
+                            <span class="badge badge-info">Top Performer</span>
+                        </div>
+                    </div>
+
+                    <div class="mentee-actions">
+                        <button class="btn btn-primary" style="flex: 1;">Give Feedback</button>
+                        <button class="btn btn-secondary">Message</button>
+                    </div>
+                </div>
+
+                <!-- Mentee 3 -->
+                <div class="mentee-card">
+                    <div class="mentee-header">
+                        <img src="https://ui-avatars.com/api/?name=Karthik+Reddy&background=EF4444&color=fff"
+                            alt="Karthik" class="avatar-lg">
+                        <div class="mentee-info">
+                            <h3>Karthik Reddy</h3>
+                            <div class="mentee-meta">Cloud Infrastructure Setup</div>
+                            <div class="mentee-meta">Week 3 of 8 • 30% Complete</div>
+                        </div>
+                    </div>
+
+                    <div class="performance-bars">
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Technical Skills</span>
+                                <span style="font-weight: var(--font-semibold);">3.5/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%; background: var(--color-warning);"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Time Management</span>
+                                <span style="font-weight: var(--font-semibold);">3.2/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 64%; background: var(--color-error);"></div>
+                            </div>
+                        </div>
+                        <div class="performance-item">
+                            <div class="performance-label">
+                                <span>Communication</span>
+                                <span style="font-weight: var(--font-semibold);">3.8/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 76%; background: var(--color-warning);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: var(--space-4);">
+                        <div style="font-size: var(--text-sm); color: var(--slate-600); margin-bottom: var(--space-2);">
+                            <strong>Latest Update:</strong> Facing challenges with Docker setup. Need additional
+                            support.
+                        </div>
+                        <div style="display: flex; gap: var(--space-2);">
+                            <span class="badge badge-warning">Needs Attention</span>
+                            <span class="badge badge-error">At Risk</span>
+                        </div>
+                    </div>
+
+                    <div class="mentee-actions">
+                        <button class="btn btn-primary" style="flex: 1;">Give Feedback</button>
+                        <button class="btn btn-secondary">Message</button>
+                    </div>
+                </div>
+
+                <!-- Schedule Card -->
+                <div class="schedule-card">
+                    <h3 style="margin-bottom: var(--space-4);">This Week's Schedule</h3>
+                    <div class="meeting-list">
+                        <div class="meeting-item">
+                            <div class="meeting-time">Thu 3 PM</div>
+                            <div>
+                                <strong>1:1 with Rohan</strong>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Weekly check-in</div>
+                            </div>
+                        </div>
+                        <div class="meeting-item">
+                            <div class="meeting-time">Fri 11 AM</div>
+                            <div>
+                                <strong>1:1 with Anjali</strong>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Project review</div>
+                            </div>
+                        </div>
+                        <div class="meeting-item">
+                            <div class="meeting-time">Fri 2 PM</div>
+                            <div>
+                                <strong>1:1 with Karthik</strong>
+                                <div style="font-size: var(--text-sm); color: var(--slate-500);">Troubleshooting session
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-ghost" style="width: 100%; margin-top: var(--space-4);">
+                        View Full Calendar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

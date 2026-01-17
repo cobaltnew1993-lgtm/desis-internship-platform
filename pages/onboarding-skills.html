@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Assessment - DESIS Onboarding</title>
+    <link rel="stylesheet" href="../styles/design-system.css">
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: var(--slate-50);
+            padding: var(--space-8) 0;
+        }
+
+        .onboarding-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .onboarding-card {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: var(--space-10);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .onboarding-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-8);
+            border-bottom: 2px solid var(--slate-200);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: var(--space-3) var(--space-6);
+            font-weight: var(--font-medium);
+            color: var(--slate-600);
+            background: none;
+            border: none;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab:hover {
+            color: var(--color-accent);
+        }
+
+        .tab.active {
+            color: var(--color-accent);
+            border-bottom-color: var(--color-accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-6);
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            transition: background 0.2s ease;
+        }
+
+        .skill-item:hover {
+            background: var(--slate-50);
+        }
+
+        .skill-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .skill-details {
+            flex: 1;
+        }
+
+        .skill-name {
+            font-weight: var(--font-medium);
+            color: var(--slate-700);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .skill-badge {
+            font-size: var(--text-xs);
+            padding: 0.125rem 0.5rem;
+            background: var(--slate-100);
+            border-radius: var(--radius-sm);
+            color: var(--slate-600);
+        }
+
+        .proficiency-slider-container {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-top: var(--space-2);
+        }
+
+        .proficiency-slider {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--slate-200);
+            border-radius: var(--radius-full);
+            outline: none;
+            transition: opacity 0.2s;
+        }
+
+        .proficiency-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+
+        .proficiency-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-accent);
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow);
+        }
+
+        .proficiency-label {
+            font-size: var(--text-sm);
+            color: var(--slate-600);
+            min-width: 90px;
+            font-weight: var(--font-medium);
+        }
+
+        .proficiency-label.beginner {
+            color: var(--slate-500);
+        }
+
+        .proficiency-label.intermediate {
+            color: var(--color-warning);
+        }
+
+        .proficiency-label.advanced {
+            color: var(--color-success);
+        }
+
+        .proficiency-label.expert {
+            color: var(--color-accent);
+        }
+
+        .skill-item.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .add-skill-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            border: 2px dashed var(--slate-300);
+            border-radius: var(--radius-lg);
+            background: none;
+            color: var(--slate-600);
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            font-weight: var(--font-medium);
+        }
+
+        .add-skill-btn:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .skills-summary {
+            margin-top: var(--space-8);
+            padding: var(--space-6);
+            background: var(--slate-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .skills-summary-title {
+            font-weight: var(--font-semibold);
+            color: var(--slate-700);
+            margin-bottom: var(--space-3);
+        }
+
+        .selected-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-2);
+        }
+
+        .selected-skill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background: white;
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skill-level-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .onboarding-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--space-8);
+            padding-top: var(--space-6);
+            border-top: 1px solid var(--slate-200);
+        }
+
+        @media (max-width: 768px) {
+            .onboarding-card {
+                padding: var(--space-6);
+            }
+
+            .tabs {
+                gap: var(--space-1);
+            }
+
+            .tab {
+                padding: var(--space-2) var(--space-4);
+                font-size: var(--text-sm);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient-mesh"></div>
+
+    <div class="onboarding-container">
+        <div class="container">
+            <div class="onboarding-content">
+                <!-- Progress Steps -->
+                <div class="progress-steps">
+                    <div class="progress-step completed">
+                        <div class="progress-step-circle">✓</div>
+                        <div class="progress-step-label">Profile</div>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="progress-step-circle">2</div>
+                        <div class="progress-step-label">Skills</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-circle">3</div>
+                        <div class="progress-step-label">Preferences</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-step-circle">4</div>
+                        <div class="progress-step-label">Schedule</div>
+                    </div>
+                </div>
+
+                <!-- Onboarding Card -->
+                <div class="onboarding-card fade-in">
+                    <div class="onboarding-header">
+                        <h2 style="margin-bottom: var(--space-2);">What are your superpowers? 🚀</h2>
+                        <p style="color: var(--slate-600);">Select your technical skills and rate your proficiency</p>
+                    </div>
+
+                    <form id="skillsForm">
+                        <!-- Tabs -->
+                        <div class="tabs">
+                            <button type="button" class="tab active" data-tab="frontend">Frontend</button>
+                            <button type="button" class="tab" data-tab="backend">Backend</button>
+                            <button type="button" class="tab" data-tab="data">Data & ML</button>
+                            <button type="button" class="tab" data-tab="other">Other</button>
+                        </div>
+
+                        <!-- Frontend Tab -->
+                        <div class="tab-content active" data-content="frontend">
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="react" data-skill="React">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="react">React</label>
+                                            <span class="skill-badge">Popular</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="vue" data-skill="Vue.js">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="vue">Vue.js</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="angular" data-skill="Angular">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="angular">Angular</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="html-css" data-skill="HTML/CSS">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="html-css">HTML/CSS</label>
+                                            <span class="skill-badge">Essential</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="3"
+                                                disabled>
+                                            <span class="proficiency-label advanced">Advanced</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="javascript"
+                                        data-skill="JavaScript">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="javascript">JavaScript</label>
+                                            <span class="skill-badge">Essential</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="3"
+                                                disabled>
+                                            <span class="proficiency-label advanced">Advanced</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="typescript"
+                                        data-skill="TypeScript">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="typescript">TypeScript</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="add-skill-btn mt-6">
+                                <span>+</span> Add Custom Frontend Skill
+                            </button>
+                        </div>
+
+                        <!-- Backend Tab -->
+                        <div class="tab-content" data-content="backend">
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="nodejs" data-skill="Node.js">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="nodejs">Node.js</label>
+                                            <span class="skill-badge">Popular</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="python" data-skill="Python">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="python">Python</label>
+                                            <span class="skill-badge">Popular</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="3"
+                                                disabled>
+                                            <span class="proficiency-label advanced">Advanced</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="java" data-skill="Java">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="java">Java</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="go" data-skill="Go">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="go">Go</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="dotnet" data-skill=".NET">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="dotnet">.NET</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="add-skill-btn mt-6">
+                                <span>+</span> Add Custom Backend Skill
+                            </button>
+                        </div>
+
+                        <!-- Data & ML Tab -->
+                        <div class="tab-content" data-content="data">
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="sql" data-skill="SQL">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="sql">SQL</label>
+                                            <span class="skill-badge">Essential</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="mongodb" data-skill="MongoDB">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="mongodb">MongoDB</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="pandas" data-skill="Pandas/NumPy">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="pandas">Pandas/NumPy</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="ml" data-skill="Machine Learning">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="ml">Machine Learning</label>
+                                            <span class="skill-badge">Advanced</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="add-skill-btn mt-6">
+                                <span>+</span> Add Custom Data Skill
+                            </button>
+                        </div>
+
+                        <!-- Other Tab -->
+                        <div class="tab-content" data-content="other">
+                            <div class="skill-list">
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="git" data-skill="Git">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="git">Git</label>
+                                            <span class="skill-badge">Essential</span>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="3"
+                                                disabled>
+                                            <span class="proficiency-label advanced">Advanced</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="docker" data-skill="Docker">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="docker">Docker</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="cloud"
+                                        data-skill="Cloud (AWS/Azure/GCP)">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="cloud">Cloud (AWS/Azure/GCP)</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="1"
+                                                disabled>
+                                            <span class="proficiency-label beginner">Beginner</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="skill-item">
+                                    <input type="checkbox" class="skill-checkbox" id="testing"
+                                        data-skill="Testing (Jest/Pytest)">
+                                    <div class="skill-details">
+                                        <div class="skill-name">
+                                            <label for="testing">Testing (Jest/Pytest)</label>
+                                        </div>
+                                        <div class="proficiency-slider-container">
+                                            <input type="range" class="proficiency-slider" min="1" max="4" value="2"
+                                                disabled>
+                                            <span class="proficiency-label intermediate">Intermediate</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="add-skill-btn mt-6">
+                                <span>+</span> Add Custom Skill
+                            </button>
+                        </div>
+
+                        <!-- Skills Summary -->
+                        <div class="skills-summary">
+                            <div class="skills-summary-title">Selected Skills (<span id="skillCount">0</span>)</div>
+                            <div class="selected-skills" id="selectedSkills">
+                                <p style="color: var(--slate-500); font-size: var(--text-sm);">No skills selected yet.
+                                    Check the boxes above to add skills.</p>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="onboarding-actions">
+                            <button type="button" class="btn btn-ghost" onclick="history.back()">
+                                ← Back
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Continue →
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetTab = tab.dataset.tab;
+
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+
+                tab.classList.add('active');
+                document.querySelector(`[data-content="${targetTab}"]`).classList.add('active');
+            });
+        });
+
+        // Skill selection and proficiency
+        const skillCheckboxes = document.querySelectorAll('.skill-checkbox');
+        const selectedSkillsContainer = document.getElementById('selectedSkills');
+        const skillCountSpan = document.getElementById('skillCount');
+        let selectedSkills = [];
+
+        const proficiencyLabels = ['Beginner', 'Intermediate', 'Advanced', 'Expert'];
+        const proficiencyClasses = ['beginner', 'intermediate', 'advanced', 'expert'];
+        const proficiencyColors = ['#94A3B8', '#F59E0B', '#10B981', '#4F46E5'];
+
+        skillCheckboxes.forEach(checkbox => {
+            const slider = checkbox.closest('.skill-item').querySelector('.proficiency-slider');
+            const label = checkbox.closest('.skill-item').querySelector('.proficiency-label');
+
+            checkbox.addEventListener('change', () => {
+                const skillName = checkbox.dataset.skill;
+
+                if (checkbox.checked) {
+                    slider.disabled = false;
+                    checkbox.closest('.skill-item').classList.remove('disabled');
+                    addSkill(skillName, slider.value);
+                } else {
+                    slider.disabled = true;
+                    removeSkill(skillName);
+                }
+                updateSkillsSummary();
+            });
+
+            slider.addEventListener('input', () => {
+                const level = parseInt(slider.value) - 1;
+                label.textContent = proficiencyLabels[level];
+                label.className = 'proficiency-label ' + proficiencyClasses[level];
+
+                if (checkbox.checked) {
+                    addSkill(checkbox.dataset.skill, slider.value);
+                    updateSkillsSummary();
+                }
+            });
+        });
+
+        function addSkill(name, level) {
+            const existing = selectedSkills.find(s => s.name === name);
+            if (existing) {
+                existing.level = level;
+            } else {
+                selectedSkills.push({ name, level });
+            }
+        }
+
+        function removeSkill(name) {
+            selectedSkills = selectedSkills.filter(s => s.name !== name);
+        }
+
+        function updateSkillsSummary() {
+            skillCountSpan.textContent = selectedSkills.length;
+
+            if (selectedSkills.length === 0) {
+                selectedSkillsContainer.innerHTML = '<p style="color: var(--slate-500); font-size: var(--text-sm);">No skills selected yet. Check the boxes above to add skills.</p>';
+                return;
+            }
+
+            selectedSkillsContainer.innerHTML = selectedSkills.map(skill => {
+                const level = parseInt(skill.level) - 1;
+                const color = proficiencyColors[level];
+                return `
+                    <div class="selected-skill-tag">
+                        <div class="skill-level-dot" style="background: ${color};"></div>
+                        <span>${skill.name}</span>
+                        <span style="color: var(--slate-400);">•</span>
+                        <span style="color: var(--slate-600); font-size: var(--text-xs);">${proficiencyLabels[level]}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Form submission
+        document.getElementById('skillsForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (selectedSkills.length === 0) {
+                alert('Please select at least one skill to continue.');
+                return;
+            }
+
+            console.log('Selected skills:', selectedSkills);
+            window.location.href = 'onboarding-preferences.html';
+        });
+    </script>
+</body>
+
+</html>
