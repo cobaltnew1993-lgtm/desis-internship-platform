@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DESIS Summer Internship Program</title>
     <link rel="stylesheet" href="styles/design-system.css">
+    <style>
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr !important;
+                gap: var(--space-8) !important;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .hero-left {
+                text-align: center !important;
+            }
+
+            .hero-left .flex {
+                justify-content: center !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <!-- Background Gradient Mesh -->
     <div class="bg-gradient-mesh"></div>
@@ -22,45 +44,66 @@
     <!-- Hero Section -->
     <section class="section" style="min-height: 100vh; display: flex; align-items: center; padding-top: 100px;">
         <div class="container text-center">
-            <div style="max-width: 900px; margin: 0 auto;">
-                <div class="badge badge-info mb-6" style="display: inline-block;">
-                    ✨ Summer Internship Program 2026
+            <div
+                style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: var(--space-12);">
+                <!-- Hero Left Content -->
+                <div style="text-align: left;">
+                    <div class="badge badge-info mb-6" style="display: inline-block;">
+                        ✨ Summer 2026
+                    </div>
+
+                    <h1 style="font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: var(--space-6); line-height: 1.1;">
+                        Transform Your Internship Journey
+                    </h1>
+
+                    <p style="font-size: var(--text-lg); color: var(--slate-600); margin-bottom: var(--space-8);">
+                        8-week program combining cutting-edge projects, expert mentorship, and AI-powered insights.
+                    </p>
+
+                    <div class="flex gap-4" style="flex-wrap: wrap;">
+                        <a href="pages/login.html" class="btn btn-primary btn-lg">Get Started</a>
+                        <a href="#features" class="btn btn-secondary btn-lg">Learn More</a>
+                    </div>
                 </div>
-                
-                <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: var(--space-6); line-height: 1.1;">
-                    Transform Your Internship Journey
-                </h1>
-                
-                <p style="font-size: var(--text-xl); color: var(--slate-600); max-width: 700px; margin: 0 auto var(--space-8);">
-                    Experience an 8-week program that combines cutting-edge projects, expert mentorship, 
-                    and AI-powered insights to launch your career in technology.
-                </p>
-                
-                <div class="flex gap-4" style="justify-content: center; flex-wrap: wrap;">
-                    <a href="pages/login.html" class="btn btn-primary btn-lg">Get Started</a>
-                    <a href="#features" class="btn btn-secondary btn-lg">Learn More</a>
-                </div>
-                
-                <!-- Stats -->
-                <div class="grid-4 mt-8" style="max-width: 800px; margin: var(--space-16) auto 0;">
-                    <div>
-                        <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">500+</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-500);">Interns</div>
-                    </div>
-                    <div>
-                        <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">50+</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-500);">Mentors</div>
-                    </div>
-                    <div>
-                        <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">100%</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-500);">Placement Rate</div>
-                    </div>
-                    <div>
-                        <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">8</div>
-                        <div style="font-size: var(--text-sm); color: var(--slate-500);">Weeks</div>
+
+                <!-- Hero Right Visual -->
+                <div class="hero-visual" style="position: relative;">
+                    <div
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: var(--radius-2xl); padding: var(--space-12); text-align: center; box-shadow: var(--shadow-2xl);">
+                        <div style="font-size: 8rem; margin-bottom: var(--space-6);">👩‍💻</div>
+                        <div
+                            style="display: flex; gap: var(--space-4); justify-content: center; margin-bottom: var(--space-4);">
+                            <div style="font-size: 3rem;">👨‍💻</div>
+                            <div style="font-size: 3rem;">🎓</div>
+                            <div style="font-size: 3rem;">💼</div>
+                        </div>
+                        <p style="color: white; font-size: var(--text-xl); font-weight: 600;">Join 500+ Interns</p>
                     </div>
                 </div>
             </div>
+
+            <!-- Stats moved below hero -->
+            <div class="grid-4 mt-8" style="max-width: 800px; margin: var(--space-16) auto 0;">
+
+
+                <div>
+                    <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">500+</div>
+                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Interns</div>
+                </div>
+                <div>
+                    <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">50+</div>
+                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Mentors</div>
+                </div>
+                <div>
+                    <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">100%</div>
+                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Placement Rate</div>
+                </div>
+                <div>
+                    <div style="font-size: var(--text-4xl); font-weight: bold; color: var(--slate-900);">8</div>
+                    <div style="font-size: var(--text-sm); color: var(--slate-500);">Weeks</div>
+                </div>
+            </div>
+        </div>
         </div>
     </section>
 
@@ -68,51 +111,58 @@
     <section id="features" class="section" style="background: var(--slate-50); padding: var(--space-24) 0;">
         <div class="container">
             <div class="text-center mb-8">
-                <h2 style="margin-bottom: var(--space-4);">Why DESIS Internship?</h2>
+                <h2 style="margin-bottom: var(--space-4);">Why Choose DESIS?</h2>
                 <p style="font-size: var(--text-lg); color: var(--slate-600); max-width: 600px; margin: 0 auto;">
-                    A comprehensive platform designed to make your internship experience exceptional
+                    Everything you need for an exceptional internship experience
                 </p>
             </div>
 
             <div class="grid-4">
                 <!-- Feature 1 -->
                 <div class="card">
-                    <div style="width: 50px; height: 50px; background: var(--color-accent); border-radius: var(--radius-lg); 
+                    <div
+                        style="width: 50px; height: 50px; background: var(--color-accent); border-radius: var(--radius-lg); 
                                 display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
                         <span style="font-size: 1.5rem;">🎯</span>
                     </div>
-                    <h4>Smart Project Matching</h4>
-                    <p style="color: var(--slate-600);">AI-powered algorithm matches you to projects that align with your skills and career goals.</p>
+                    <h4>Smart Matching</h4>
+                    <p style="color: var(--slate-600);"> AI-powered algorithm matches you to projects aligned with your
+                        skills.</p>
                 </div>
 
                 <!-- Feature 2 -->
                 <div class="card">
-                    <div style="width: 50px; height: 50px; background: var(--color-success); border-radius: var(--radius-lg); 
+                    <div
+                        style="width: 50px; height: 50px; background: var(--color-success); border-radius: var(--radius-lg); 
                                 display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
                         <span style="font-size: 1.5rem;">💬</span>
                     </div>
                     <h4>Continuous Feedback</h4>
-                    <p style="color: var(--slate-600);">Weekly feedback from mentors keeps you on track and helps you grow throughout the program.</p>
+                    <p style="color: var(--slate-600);">Weekly mentor feedback to keep you on track and growing.</p>
                 </div>
 
                 <!-- Feature 3 -->
                 <div class="card">
-                    <div style="width: 50px; height: 50px; background: var(--color-warning); border-radius: var(--radius-lg); 
+                    <div
+                        style="width: 50px; height: 50px; background: var(--color-warning); border-radius: var(--radius-lg); 
                                 display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
                         <span style="font-size: 1.5rem;">📚</span>
                     </div>
                     <h4>Learning Resources</h4>
-                    <p style="color: var(--slate-600);">Access curated resources and personalized learning paths tailored to your project needs.</p>
+                    <p style="color: var(--slate-600);">Curated resources and personalized learning paths for your
+                        project.</p>
                 </div>
 
                 <!-- Feature 4 -->
                 <div class="card">
-                    <div style="width: 50px; height: 50px; background: var(--color-info); border-radius: var(--radius-lg); 
+                    <div
+                        style="width: 50px; height: 50px; background: var(--color-info); border-radius: var(--radius-lg); 
                                 display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
                         <span style="font-size: 1.5rem;">✨</span>
                     </div>
-                    <h4>AI-Powered Insights</h4>
-                    <p style="color: var(--slate-600);">Get intelligent recommendations and analytics to maximize your learning and impact.</p>
+                    <h4>AI Insights</h4>
+                    <p style="color: var(--slate-600);">Intelligent recommendations and analytics to maximize your
+                        impact.</p>
                 </div>
             </div>
         </div>
@@ -124,7 +174,7 @@
             <div class="text-center mb-8">
                 <h2 style="margin-bottom: var(--space-4);">Your 8-Week Journey</h2>
                 <p style="font-size: var(--text-lg); color: var(--slate-600);">
-                    A structured path from onboarding to placement
+                    Structured path from day one to your placement offer
                 </p>
             </div>
 
@@ -139,8 +189,8 @@
                                     justify-content: center; color: white; font-weight: bold;">
                             1-2
                         </div>
-                        <h5>Onboarding & Training</h5>
-                        <p>Complete your profile, get matched to a project, and kickoff with your mentor.</p>
+                        <h5>Onboarding</h5>
+                        <p>Complete profile, get project matched, meet your mentor.</p>
                     </div>
 
                     <!-- Week 3-6 -->
@@ -151,8 +201,8 @@
                                     justify-content: center; color: white; font-weight: bold;">
                             3-6
                         </div>
-                        <h5>Project Execution</h5>
-                        <p>Work on your project, receive weekly feedback, and access learning resources.</p>
+                        <h5>Project Work</h5>
+                        <p>Build your project with weekly feedback and learning support.</p>
                     </div>
 
                     <!-- Week 7 -->
@@ -163,8 +213,8 @@
                                     justify-content: center; color: white; font-weight: bold;">
                             7
                         </div>
-                        <h5>Final Preparation</h5>
-                        <p>Polish deliverables and prepare your final presentation with mentor guidance.</p>
+                        <h5>Preparation</h5>
+                        <p>Polish deliverables and prepare presentation with mentor.</p>
                     </div>
 
                     <!-- Week 8 -->
@@ -175,9 +225,39 @@
                                     justify-content: center; color: white; font-weight: bold;">
                             8
                         </div>
-                        <h5>Presentations & Evaluation</h5>
-                        <p>Showcase your work to the jury and receive your evaluation and placement offer.</p>
+                        <h5>Evaluation</h5>
+                        <p>Present your work and receive placement offer.</p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section" style="background: var(--slate-50);">
+        <div class="container">
+            <div class="text-center mb-8">
+                <h2 style="margin-bottom: var(--space-4);">About DESIS</h2>
+                <p style="font-size: var(--text-lg); color: var(--slate-600); max-width: 700px; margin: 0 auto;">
+                    DESIS Summer Internship Program is designed to provide students with hands-on experience in
+                    technology, mentorship from industry experts, and a structured path to full-time employment.
+                </p>
+            </div>
+            <div class="grid-3" style="max-width: 900px; margin: 0 auto;">
+                <div style="text-align: center; padding: var(--space-6);">
+                    <div style="font-size: 3rem; margin-bottom: var(--space-4);">🎯</div>
+                    <h4>Our Mission</h4>
+                    <p style="color: var(--slate-600);">Empower students with real-world tech experience</p>
+                </div>
+                <div style="text-align: center; padding: var(--space-6);">
+                    <div style="font-size: 3rem; margin-bottom: var(--space-4);">💡</div>
+                    <h4>Our Approach</h4>
+                    <p style="color: var(--slate-600);">Combine project work with mentorship and AI insights</p>
+                </div>
+                <div style="text-align: center; padding: var(--space-6);">
+                    <div style="font-size: 3rem; margin-bottom: var(--space-4);">🚀</div>
+                    <h4>Our Success</h4>
+                    <p style="color: var(--slate-600);">100% placement rate for program graduates</p>
                 </div>
             </div>
         </div>
@@ -187,11 +267,11 @@
     <section class="section" style="background: var(--slate-900); color: white; text-align: center;">
         <div class="container">
             <div style="max-width: 700px; margin: 0 auto;">
-                <h2 style="color: white; margin-bottom: var(--space-6);">Ready to Start Your Journey?</h2>
+                <h2 style="color: white; margin-bottom: var(--space-6);">Ready to Begin?</h2>
                 <p style="font-size: var(--text-lg); color: var(--slate-300); margin-bottom: var(--space-8);">
-                    Join hundreds of interns who have transformed their careers through the DESIS Summer Internship Program.
+                    Join 500+ interns transforming their careers this summer.
                 </p>
-                <a href="pages/login.html" class="btn btn-accent btn-lg">Access Platform</a>
+                <a href="pages/login.html" class="btn btn-accent btn-lg">Get Started Now</a>
             </div>
         </div>
     </section>
@@ -221,7 +301,7 @@
         window.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('section[id]');
             const navLinks = document.querySelectorAll('.nav-link');
-            
+
             let current = '';
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
@@ -240,4 +320,5 @@
         });
     </script>
 </body>
+
 </html>

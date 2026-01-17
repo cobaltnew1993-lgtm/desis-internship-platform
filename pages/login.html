@@ -68,7 +68,7 @@
 
         .logo {
             font-family: var(--font-display);
-            font-size: var(--text-3xl);
+            font-size: var(--text-2xl);
             font-weight: var(--font-bold);
             color: var(--slate-900);
             margin-bottom: var(--space-2);
@@ -184,7 +184,8 @@
 
         .quote-author {
             font-size: var(--text-base);
-            opacity: 0.9;
+            opacity: 1;
+            font-weight: 500;
         }
 
         .program-highlights {
@@ -261,13 +262,14 @@
                 <form id="loginForm">
                     <div class="form-group">
                         <label class="form-label" for="email">Email Address</label>
-                        <input type="email" id="email" class="form-input" placeholder="your.email@desis.com" required>
+                        <input type="email" id="email" class="form-input" placeholder="your.email@desis.com"
+                            value="demo.intern@desis.com" required>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="password">Password</label>
                         <input type="password" id="password" class="form-input" placeholder="Enter your password"
-                            required>
+                            value="demo123" required>
                     </div>
 
                     <div class="remember-forgot">
@@ -293,11 +295,12 @@
         <div class="login-right">
             <div class="quote-section">
                 <div class="quote-icon">"</div>
-                <p class="quote-text">
+                <p class="quote-text" style="font-weight: 500;">
                     The internship program transformed my career.
                     I learned, I built, and I grew into a confident engineer.
                 </p>
-                <p class="quote-author">— Priya Sharma, SDE-2 (2024 Intern)</p>
+                <p class="quote-author" style="color: rgba(255, 255, 255, 0.95);">— Priya Sharma, SDE-2 (2024 Intern)
+                </p>
 
                 <div class="program-highlights">
                     <div class="highlight-item">
@@ -343,13 +346,13 @@
 
             // Redirect based on role
             const redirects = {
-                'intern': 'intern-dashboard.html',
+                'intern': 'onboarding-profile.html',  // Interns go to onboarding first
                 'mentor': 'mentor-dashboard.html',
                 'hr': 'hr-dashboard.html',
                 'jury': 'evaluation-form.html'
             };
 
-            // Redirect to appropriate dashboard
+            // Redirect to appropriate page
             window.location.href = redirects[selectedRole];
         });
 
